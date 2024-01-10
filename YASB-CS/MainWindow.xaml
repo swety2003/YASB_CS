@@ -1,0 +1,67 @@
+﻿<Window x:Class="YASB_CS.MainWindow"
+        Topmost="True"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YASB_CS"
+        mc:Ignorable="d"
+        xmlns:dock="clr-namespace:YASB_CS.Controls.Docking"
+        dock:DesktopAppBar.AppBar="Top"
+        Background="Transparent"
+        WindowStyle="None"
+        Foreground="White"
+        ResizeMode="NoResize"
+        xmlns:vm="clr-namespace:YASB_CS.ViewModel"
+        Title="MainWindow" Height="32" Width="1920"
+        d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
+        >
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="-1" CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <ContextMenu x:Key="contextMenu">
+            <MenuItem Name="Settings" Header="设置" Command="{Binding ShowSettingCommand}"></MenuItem>
+            <MenuItem Name="Exit" Header="退出" Command="{Binding ExitAppCommand}"></MenuItem>
+
+        </ContextMenu>
+    </Window.Resources>
+    <Border Background="#3b6769" CornerRadius="0" Margin="0" ContextMenu="{StaticResource contextMenu}">
+        <Grid Margin="0 2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+
+        
+            </Grid.ColumnDefinitions>
+
+
+            <StackPanel x:Name="left_area"  Orientation="Horizontal" VerticalAlignment="Stretch">
+
+                
+
+
+            </StackPanel>
+
+            <StackPanel x:Name="center_area" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Stretch">
+                
+
+            </StackPanel>
+
+            <StackPanel x:Name="right_area"  Margin="0 1 4 1" HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
+
+                <Border Margin="2 0" CornerRadius="4" Background="#fe8019">
+                    <TextBlock Margin="4 2" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">8.3G/16G</TextBlock>
+                </Border>
+
+                
+                
+                <Border Margin="2 0" CornerRadius="4" Background="#8ec07c">
+                    <TextBlock Margin="6 2" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">100%</TextBlock>
+                </Border>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>
