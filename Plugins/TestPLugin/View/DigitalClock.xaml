@@ -9,6 +9,6 @@
              d:DataContext="{d:DesignInstance Type=vm:DigitalClockVM}"
              >
     <Border>
-        <TextBlock FontSize="18" Text="{Binding NowTime, StringFormat={}{0:HH:mm:ss}, ConverterCulture=Zh-CN, FallbackValue=00:00:00}" VerticalAlignment="Center"/>
+        <TextBlock FontWeight="Bold" FontSize="18" Text="{Binding NowTime, StringFormat={}{0:HH:mm:ss}, ConverterCulture=Zh-CN, FallbackValue=00:00:00}" VerticalAlignment="Center"/>
     </Border>
 </UserControl>

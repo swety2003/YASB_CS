@@ -2,20 +2,12 @@
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using TestPlugin.KomorebiController;
 using TestPlugin.Model;
-using TestPlugin.View;
 
 namespace TestPlugin.ViewModel
 {
@@ -25,6 +17,7 @@ namespace TestPlugin.ViewModel
         public WorkSpaceVM(UserControl control) : base(control)
         {
             OnActiveChanged += WorkSpaceVM_OnActiveChanged;
+
         }
 
         private void WorkSpaceVM_OnActiveChanged(object? sender, bool e)
@@ -41,24 +34,12 @@ namespace TestPlugin.ViewModel
 
         PipeServer server;
 
-        //[ObservableProperty]
-        //private int focusedWorkspaceIndex=-1;
-        private int focusedWorkspaceIndex;
-
-        public int FocusedWorkspaceIndex
-        {
-            get { return focusedWorkspaceIndex; }
-            set 
-            {
-                SetProperty(ref focusedWorkspaceIndex, value);
-            }
-        }
-
-
-
+        [ObservableProperty]
+        private WorkspaceData focusedWorkspace = null;
 
         [ObservableProperty]
         private ObservableCollection<WorkspaceData> workspaces = new ObservableCollection<WorkspaceData>();
+
 
         [ObservableProperty]
         private windows_item activeWinInfo;
@@ -68,15 +49,29 @@ namespace TestPlugin.ViewModel
         {
             CommandSender.ChangeWorkSpace(name);
         }
+        [RelayCommand]
+        void SendToWorkSpace(string name)
+        {
+            CommandSender.SendFocusedToWorkSpace(name);
+        }
         public void Stop()
         {
-            //server.pipeServer.Close();
+            server.pipeServer?.Close();
             CommandSender.UnSubscribe();
+            CommandSender.StopProcess();
 
         }
         public async Task Start()
         {
-            if(server== null)
+            if (!CommandSender.Running())
+            {
+                CommandSender.StartProcess();
+
+                Console.WriteLine("Wait for 3s...");
+
+                await Task.Delay(3000);
+            }
+            if (server == null)
             {
 
                 server = new PipeServer();
@@ -84,7 +79,7 @@ namespace TestPlugin.ViewModel
 
                 CommandSender.Subscribe(PipeServer.pipeName);
 
-                if(!server.pipeServer.IsConnected)
+                if (!server.pipeServer.IsConnected)
                 {
                     await server.pipeServer.WaitForConnectionAsync();
                     Console.WriteLine("Connected");
@@ -105,10 +100,12 @@ namespace TestPlugin.ViewModel
                     List<WorkspaceData> datas = new List<WorkspaceData>();
                     foreach (var item in data.state.monitors.elements[0].workspaces.elements)
                     {
-                        datas.Add(new WorkspaceData(item.name));
+                        datas.Add(new WorkspaceData(item.name, item.containers.elements));
                     }
                     Workspaces = new ObservableCollection<WorkspaceData>(datas);
 
+
+                    Console.WriteLine($"Event:{data.@event.type}");
 
                     if (data.@event.type == "FocusChange")
                     {
@@ -120,11 +117,13 @@ namespace TestPlugin.ViewModel
                     }
 
 
-                    Console.WriteLine($"Current workspace:{data.state.monitors.elements[0].workspaces.focused}");
 
-                    FocusedWorkspaceIndex = data.state.monitors.elements[0].workspaces.focused;
+                    var focusedWorkspaceIndex = data.state.monitors.elements[0].workspaces.focused;
 
+                    await Task.Delay(50);
+                    FocusedWorkspace = Workspaces[focusedWorkspaceIndex];
 
+                    Console.WriteLine($"Current workspace:{focusedWorkspaceIndex}");
 
 
 

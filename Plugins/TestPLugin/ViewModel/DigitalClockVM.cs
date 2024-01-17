@@ -1,18 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace TestPlugin.ViewModel
 {
-    internal partial class DigitalClockVM:ViewModelBase
+    internal partial class DigitalClockVM : ViewModelBase
     {
-        public DigitalClockVM(UserControl control):base(control)
+        public DigitalClockVM(UserControl control) : base(control)
         {
             _Timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.5) };
             this.OnActiveChanged += DigitalClockVM_OnActiveChanged;

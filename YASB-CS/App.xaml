@@ -2,8 +2,34 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:YASB_CS"
+             xmlns:m3c="clr-namespace:MaterialDesign3.Styles.Colors;assembly=MaterialDesign3"
+             
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <ResourceDictionary>
+
+
+            <ResourceDictionary.MergedDictionaries>
+
+
+                <ResourceDictionary>
+                    <CornerRadius x:Key="DefaultCornerRadius">6</CornerRadius>
+                </ResourceDictionary>
+
+
+
+
+                <m3c:ColorSystem Type="Dark" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MaterialDesign3;component/Styles/Colors/LightColor.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesign3;component/Styles/Brushes/MD3Brush.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesign3;component/Themes/Generic.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesign3;component/Styles/Icon/MaterialIconsRound.xaml" />
+
+
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

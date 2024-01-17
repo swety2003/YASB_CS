@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using YASB_CS.Common;
+using YASB_CS.Controls.Docking;
 using YASB_CS.Model;
 using YASB_CS.View;
 
@@ -37,7 +38,8 @@ namespace YASB_CS.ViewModel
         [RelayCommand]
         private void ExitApp()
         {
-
+            var w = Application.Current.MainWindow;
+            DesktopAppBar.SetAppBar(w, AppBarEdge.None);
             Application.Current.Shutdown();
         }
 

@@ -1,28 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.IO;
 using System.IO.Pipes;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestPlugin.KomorebiController
 {
     public static class CommandSender
     {
+
         public static void StartProcess()
         {
-
+            var config_file = Path.Combine(Plugin.GetRunningDictionary(),"vendor", "komorebi", "data", "komorebi.json");
+            CallKomorebic($"start -c {config_file} --whkd");
         }
 
-        public static void StopProcess() { }
-
-
-        private static void CallKomorebic(string args) 
+        public static bool Running()
         {
+            var p = Process.GetProcessesByName("komorebi");
+            return p.Length > 0;
+        }
+
+        public static void SetWinHideBehavior()
+        {
+            CallKomorebic("window-hiding-behaviour hide");
+        }
+
+        public static void StopProcess()
+        {
+            //var p = Process.GetProcessesByName("komorebi");
+            //foreach (var item in p)
+            //{
+            //    item.Kill();
+            //}
+
+            CallKomorebic("stop");
+        }
+
+
+        private static void CallKomorebic(string args)
+        {
+            Console.WriteLine(args);
             Process process = new Process();
+            process.StartInfo.WorkingDirectory = Path.Combine(Plugin.GetRunningDictionary(), "vendor", "komorebi");
             process.StartInfo.FileName = "komorebic.exe";
-            process.StartInfo.Arguments =args;
+            process.StartInfo.Arguments = args;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.CreateNoWindow = true;
             process.Start();
@@ -38,10 +58,16 @@ namespace TestPlugin.KomorebiController
             CallKomorebic($"unsubscribe {pipeName}");
         }
 
-        internal static void ChangeWorkSpace(string name = PipeServer.pipeName)
+        public static void ChangeWorkSpace(string name = PipeServer.pipeName)
         {
             CallKomorebic($"focus-named-workspace {name}");
         }
+        public static void SendFocusedToWorkSpace(string name)
+        {
+            CallKomorebic($"send-to-named-workspace {name}");
+        }
+
+
     }
 
     public class PipeServer

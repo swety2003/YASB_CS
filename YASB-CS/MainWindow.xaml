@@ -10,8 +10,9 @@
         dock:DesktopAppBar.AppBar="Top"
         Background="Transparent"
         WindowStyle="None"
-        Foreground="White"
+        Foreground="{DynamicResource OnBackgroundBrush}"
         ResizeMode="NoResize"
+        ShowInTaskbar="False"
         xmlns:vm="clr-namespace:YASB_CS.ViewModel"
         Title="MainWindow" Height="32" Width="1920"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
@@ -26,7 +27,10 @@
 
         </ContextMenu>
     </Window.Resources>
-    <Border Background="#3b6769" CornerRadius="0" Margin="0" ContextMenu="{StaticResource contextMenu}">
+    <Border  CornerRadius="0" Margin="0" ContextMenu="{StaticResource contextMenu}">
+        <Border.Background>
+            <SolidColorBrush Opacity=".6" Color="{DynamicResource ResourceKey=Background}"/>
+        </Border.Background>
         <Grid Margin="0 2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -51,15 +55,6 @@
 
             <StackPanel x:Name="right_area"  Margin="0 1 4 1" HorizontalAlignment="Right" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Stretch">
 
-                <Border Margin="2 0" CornerRadius="4" Background="#fe8019">
-                    <TextBlock Margin="4 2" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">8.3G/16G</TextBlock>
-                </Border>
-
-                
-                
-                <Border Margin="2 0" CornerRadius="4" Background="#8ec07c">
-                    <TextBlock Margin="6 2" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">100%</TextBlock>
-                </Border>
             </StackPanel>
 
         </Grid>

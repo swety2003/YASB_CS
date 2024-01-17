@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34407.89
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YASB-CS", "YASB-CS\YASB-CS.csproj", "{9D796C5F-82D1-491E-A171-0F50CEDA61F4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{122ECFA0-8BDD-4598-92C5-89B8B2596CD2} = {122ECFA0-8BDD-4598-92C5-89B8B2596CD2}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginSDK", "PluginSDK\PluginSDK.csproj", "{4EF1FB39-959D-4B32-989F-09E3D7D00D6B}"
 EndProject
@@ -13,7 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestPlugin", "Plugins\TestP
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Playground", "Playground", "{A7F29E73-EB2B-4EEC-9D1F-2E5ADA4803E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{3E83DFEE-91F2-4C2B-853F-59E7BB9C52A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{3E83DFEE-91F2-4C2B-853F-59E7BB9C52A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MaterialDesign3", "MaterialDesign3\MaterialDesign3.csproj", "{23A4A9E4-AE03-4086-BFD5-87FAA74D610E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +42,10 @@ Global
 		{3E83DFEE-91F2-4C2B-853F-59E7BB9C52A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E83DFEE-91F2-4C2B-853F-59E7BB9C52A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E83DFEE-91F2-4C2B-853F-59E7BB9C52A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A4A9E4-AE03-4086-BFD5-87FAA74D610E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A4A9E4-AE03-4086-BFD5-87FAA74D610E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A4A9E4-AE03-4086-BFD5-87FAA74D610E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A4A9E4-AE03-4086-BFD5-87FAA74D610E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

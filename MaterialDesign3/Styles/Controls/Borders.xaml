@@ -1,0 +1,42 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cv="clr-namespace:MaterialDesign3.Converters">
+    <CornerRadius x:Key="MediumCornerRadius">16</CornerRadius>
+
+    <cv:CornerRadiusFull x:Key="CornerRadiusFull" />
+    <Style x:Key="FullCornerBorder" TargetType="Border">
+        <Setter Property="CornerRadius" Value="{Binding RelativeSource={RelativeSource Self}, Converter={StaticResource CornerRadiusFull}, Path=ActualHeight}" />
+    </Style>
+
+
+    <Style x:Key="CardBase" TargetType="Border">
+        <Setter Property="CornerRadius" Value="{StaticResource MediumCornerRadius}" />
+        <Setter Property="Padding" Value="16" />
+
+    </Style>
+    <Style
+        x:Key="ElevatedCard"
+        BasedOn="{StaticResource CardBase}"
+        TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Surface5Brush}" />
+
+    </Style>
+
+    <Style
+        x:Key="FilledCard"
+        BasedOn="{StaticResource CardBase}"
+        TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource SurfaceVariantBrush}" />
+
+    </Style>
+
+    <Style
+        x:Key="OutlinedCard"
+        BasedOn="{StaticResource CardBase}"
+        TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource OutlineBrush}" />
+        <Setter Property="BorderThickness" Value="1.2" />
+    </Style>
+</ResourceDictionary>

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MaterialDesign3\MaterialDesign3.csproj" />
     <ProjectReference Include="..\PluginSDK\PluginSDK.csproj" />
   </ItemGroup>
 

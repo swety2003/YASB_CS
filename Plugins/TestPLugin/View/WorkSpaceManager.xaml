@@ -8,27 +8,82 @@
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:vm="clr-namespace:TestPlugin.ViewModel"
       d:DataContext="{d:DesignInstance Type=vm:WorkSpaceVM}"
-      d:DesignHeight="450" d:DesignWidth="800">
+      xmlns:model="clr-namespace:TestPlugin.Model"
+      xmlns:pu="https://opensource.panuon.com/wpf-ui"
+      TextBlock.FontSize="16"
+      d:DesignHeight="32" d:DesignWidth="800">
+    <UserControl.Resources>
+        <d:ResourceDictionary Source="/Pugin.xaml"/>
+    </UserControl.Resources>
     <StackPanel Orientation="Horizontal">
 
-        <ListBox MinWidth="100" SelectionMode="Single" Foreground="#dedcb9" HorizontalContentAlignment="Center" 
-             Background="Transparent" BorderThickness="0" Margin="2 0"
-             SelectedIndex="{Binding FocusedWorkspaceIndex}" ItemsSource="{Binding Workspaces}">
+        <ListBox MinWidth="200" SelectionMode="Single" 
+                 Foreground="{DynamicResource OnPrimaryContainerBrush}" 
+                 HorizontalContentAlignment="Center"
+                 Background="Transparent" BorderThickness="0" Margin="2 1"
+                 SelectedItem="{Binding FocusedWorkspace}"
+                 ItemsSource="{Binding Workspaces}" 
+                 d:ItemsSource="{d:SampleData ItemCount=2}">
 
 
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
                     <!-- 设置控件模板 -->
-                    <Setter Property="Background" Value="#3b5355"/>
+                    <Setter Property="Background" Value="{DynamicResource PrimaryContainerBrush}"/>
+                    <Setter Property="ToolTip">
+                        <Setter.Value>
+                            <Grid>
+
+                                <ItemsControl MinWidth="160" MinHeight="90" ItemsSource="{Binding wins}">
+
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="6">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock FontSize="14" Text="{Binding windows.elements[0].exe}" MaxWidth="320"/>
+                                                <StackPanel Margin="0 4" Grid.Row="1">
+                                                    <Border BorderThickness="1" Background="Black" Width="320" Height="180"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Text="(空)"/>
+                            </Grid>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu FontSize="16" MaxWidth="300" pu:ContextMenuHelper.CornerRadius="6" pu:ContextMenuHelper.ItemsCornerRadius="6">
+                                <MenuItem Header="Layout">
+                                    <MenuItem Header="bsp"/>
+                                    <MenuItem Header="columns"/>
+                                    <MenuItem Header="rows"/>
+                                    <MenuItem Header="vertical-stack"/>
+                                    <MenuItem Header="horizontal-stack"/>
+                                    <MenuItem Header="ultrawide-vertical-stack"/>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListBoxItem">
-                                <Border BorderThickness="2" BorderBrush="#dedcb9" Margin="2 0" Width="32" CornerRadius="6" Background="{TemplateBinding Background}">
+                                <Border BorderThickness="0" BorderBrush="{DynamicResource PrimaryContainerBrush}" Margin="2 0" Width="32" 
+                                        CornerRadius="{StaticResource DefaultCornerRadius}" Background="{TemplateBinding Background}">
                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                  TextBlock.Foreground="{TemplateBinding Foreground}"/>
                                     <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseDown">
+                                        <i:EventTrigger EventName="MouseLeftButtonUp">
                                             <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox},Path=DataContext.ChangeWorkSpaceCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem},Path=DataContext.name}"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
@@ -41,21 +96,20 @@
                     <!-- 设置触发器 -->
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter Property="Background" Value="#dedcb9"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource OnPrimaryBrush}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter Property="Background" Value="#a0dedcb9"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Background" Value="{DynamicResource OnPrimaryBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
+                    <TextBlock Text="{Binding name}"/>
 
-                    <TextBlock FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding name}">
-                    </TextBlock>
 
 
                     <!--<Border Margin="2 0" BorderThickness="1" BorderBrush="#dedcb9" CornerRadius="4" Background="#3b5355" Width="22">
@@ -73,11 +127,37 @@
 
         </ListBox>
 
-        <Border Margin="2 1" CornerRadius="4" Background="#83a598">
 
-            <TextBlock  Margin="6 0" MaxWidth="512" TextTrimming="WordEllipsis" 
-                        FontSize="18" Text="{Binding ActiveWinInfo.title,FallbackValue=Desktop}" VerticalAlignment="Center"/>
-        </Border>
+        <Menu Margin="2 1" VerticalAlignment="Center" 
+              BorderThickness="0" FontSize="16"
+              Background="Transparent"
+              Foreground="{DynamicResource OnTertiaryContainerBrush}">
+
+            <MenuItem Header="{Binding ActiveWinInfo.title,FallbackValue=Desktop}">
+                <MenuItem Header="移动到..." ItemsSource="{Binding Workspaces}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="Command" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl},Path=DataContext.SendToWorkSpaceCommand}"/>
+                            <Setter Property="CommandParameter" Value="{Binding name}"/>
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            
+                            <TextBlock>
+                                <Run>工作区</Run>
+                                <Run Text="{Binding name}"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="关闭窗口" />
+            </MenuItem>
+
+        </Menu>
+
+
     </StackPanel>
 
 </UserControl>

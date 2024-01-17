@@ -106,9 +106,15 @@ namespace YASB_CS
         {
             //Messages.SendOnExitMsg();
 
-            base.OnExit(e);
             GetService<AppConfigManager>().Config.Status = GetService<ItemManageVM>().TopBarStatuses.ToList();
             GetService<AppConfigManager>().Save();
+            foreach (var item in GetService<ItemManageVM>().TopBarStatuses.ToList())
+            {
+                item.Enabled = false;
+            }
+
+
+            base.OnExit(e);
 
         }
 

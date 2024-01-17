@@ -4,18 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TestPlugin.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d"
+             d:DesignHeight="48" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesign3;component/Styles/Icon/MaterialIconsRound.xaml"/>
+    </UserControl.Resources>
     <Grid>
-        <Border Margin="2 0" CornerRadius="4" Background="#bdae93">
-            <TextBlock Margin="6 2" Foreground="Black" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock.Text>
-                    <MultiBinding StringFormat="{}{0}@{1}">
-                        <Binding Path="UserName"></Binding>
-                        <Binding Path="MachineName"></Binding>
-                    </MultiBinding>
-                </TextBlock.Text>
-            </TextBlock>
-        </Border>
+        <ToggleButton BorderThickness="0" Background="Transparent">
+
+
+            <Border Margin="2 0" CornerRadius="4" Background="{DynamicResource PrimaryBrush}">
+                <StackPanel Orientation="Horizontal" TextBlock.Foreground="{DynamicResource OnPrimaryBrush}">
+                    <TextBlock Padding="0" Margin="6 2" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0}@{1}">
+                                <Binding Path="UserName"></Binding>
+                                <Binding Path="MachineName"></Binding>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+
+                </StackPanel>
+            </Border>
+        </ToggleButton>
     </Grid>
 </UserControl>
