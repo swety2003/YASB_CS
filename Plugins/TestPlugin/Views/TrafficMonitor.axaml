@@ -1,0 +1,63 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:TestPlugin.ViewModels"
+             x:DataType="vm:TrafficMonitorViewModel"
+             x:Class="TestPlugin.Views.TrafficMonitor">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/WidgetPublic.axaml" />
+    </UserControl.Styles>
+
+    <StackPanel Orientation="Horizontal">
+        <StackPanel.Styles>
+            <Style Selector="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </StackPanel.Styles>
+
+        <Border Classes="card" Background="{DynamicResource SecondaryContainerBrush}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Classes="icon" Text="&#xe894;" />
+                <TextBlock Foreground="{DynamicResource OnBackgroundBrush}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run>
+                        <Run.Text>
+                            <MultiBinding StringFormat="↑{0}{1}/s ">
+                                <Binding FallbackValue="0" Path="Upload.size" />
+                                <Binding FallbackValue="k" Path="Upload.type" />
+                            </MultiBinding>
+                        </Run.Text>
+                    </Run>
+                    <Run>
+                        <Run.Text>
+                            <MultiBinding StringFormat="↓{0}{1}/s ">
+                                <Binding FallbackValue="0" Path="Download.size" />
+                                <Binding FallbackValue="k" Path="Download.type" />
+                            </MultiBinding>
+                        </Run.Text>
+                    </Run>
+
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
+
+        <Border Classes="card" Background="{DynamicResource SecondaryContainerBrush}">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel.Styles>
+                    <Style Selector="TextBlock">
+                        <Setter Property="Foreground" Value="{DynamicResource OnSecondaryContainerBrush}" />
+                    </Style>
+                </StackPanel.Styles>
+                <TextBlock Classes="icon" Text="&#xe30d;" />
+                <TextBlock Text="{Binding RamLoad}" />
+                <TextBlock Text="%" />
+                <TextBlock Classes="icon" Text="&#xe322;" />
+                <TextBlock Text="{Binding CpuLoad}" />
+                <TextBlock Text="%" />
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

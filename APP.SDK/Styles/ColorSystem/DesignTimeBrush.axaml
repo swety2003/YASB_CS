@@ -1,0 +1,60 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Add Resources Here -->
+
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+    <SolidColorBrush x:Key="OnPrimaryBrush" Color="{StaticResource OnPrimary}" />
+    <SolidColorBrush x:Key="PrimaryContainerBrush" Color="{StaticResource PrimaryContainer}" />
+    <SolidColorBrush x:Key="OnPrimaryContainerBrush" Color="{StaticResource OnPrimaryContainer}" />
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}" />
+    <SolidColorBrush x:Key="OnSecondaryBrush" Color="{StaticResource OnSecondary}" />
+    <SolidColorBrush x:Key="SecondaryContainerBrush" Color="{StaticResource SecondaryContainer}" />
+    <SolidColorBrush x:Key="OnSecondaryContainerBrush" Color="{StaticResource OnSecondaryContainer}" />
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}" />
+    <SolidColorBrush x:Key="OnTertiaryBrush" Color="{StaticResource OnTertiary}" />
+    <SolidColorBrush x:Key="TertiaryContainerBrush" Color="{StaticResource TertiaryContainer}" />
+    <SolidColorBrush x:Key="OnTertiaryContainerBrush" Color="{StaticResource OnTertiaryContainer}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource Error}" />
+    <SolidColorBrush x:Key="OnErrorBrush" Color="{StaticResource OnError}" />
+    <SolidColorBrush x:Key="ErrorContainerBrush" Color="{StaticResource ErrorContainer}" />
+    <SolidColorBrush x:Key="OnErrorContainerBrush" Color="{StaticResource OnErrorContainer}" />
+    <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource Background}" />
+    <SolidColorBrush x:Key="OnBackgroundBrush" Color="{StaticResource OnBackground}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+    <SolidColorBrush x:Key="OnSurfaceBrush" Color="{StaticResource OnSurface}" />
+    <SolidColorBrush x:Key="SurfaceVariantBrush" Color="{StaticResource SurfaceVariant}" />
+    <SolidColorBrush x:Key="OnSurfaceVariantBrush" Color="{StaticResource OnSurfaceVariant}" />
+    <SolidColorBrush x:Key="OutlineBrush" Color="{StaticResource Outline}" />
+    <SolidColorBrush x:Key="ShadowBrush" Color="{StaticResource Shadow}" />
+    <SolidColorBrush x:Key="InverseSurfaceBrush" Color="{StaticResource InverseSurface}" />
+    <SolidColorBrush x:Key="InverseOnSurfaceBrush" Color="{StaticResource InverseOnSurface}" />
+    <SolidColorBrush x:Key="InversePrimaryBrush" Color="{StaticResource InversePrimary}" />
+    <SolidColorBrush x:Key="Surface1Brush" Color="{StaticResource Surface1}" />
+    <SolidColorBrush x:Key="Surface2Brush" Color="{StaticResource Surface2}" />
+    <SolidColorBrush x:Key="Surface3Brush" Color="{StaticResource Surface3}" />
+    <SolidColorBrush x:Key="Surface4Brush" Color="{StaticResource Surface4}" />
+    <SolidColorBrush x:Key="Surface5Brush" Color="{StaticResource Surface5}" />
+
+    <!--Extra Brush-->
+    <SolidColorBrush x:Key="ExRed" Color="#B71C1C" />
+    <SolidColorBrush x:Key="ExPink" Color="#880E4F" />
+    <SolidColorBrush x:Key="ExPurple" Color="#F3E5F5" />
+    <SolidColorBrush x:Key="ExDeepPurple" Color="#EDE7F6" />
+    <SolidColorBrush x:Key="ExIndigo" Color="#E3F2FD" />
+    <SolidColorBrush x:Key="ExBlue" Color="#E3F2FD" />
+    <SolidColorBrush x:Key="ExLightBlue" Color="#E0F7FA" />
+    <SolidColorBrush x:Key="ExTeal" Color="#E0F2F1" />
+    <SolidColorBrush x:Key="ExGreen" Color="#E8F5E9" />
+    <SolidColorBrush x:Key="ExLightGreen" Color="#F1F8E9" />
+    <SolidColorBrush x:Key="ExLime" Color="#F9FBE7" />
+    <SolidColorBrush x:Key="ExYellow" Color="#FFFDE7" />
+    <SolidColorBrush x:Key="ExAmber" Color="#FFF8E1" />
+    <SolidColorBrush x:Key="ExOrange" Color="#FFF3E0" />
+    <SolidColorBrush x:Key="ExDeepOrange" Color="#FBE9E7" />
+    <SolidColorBrush x:Key="ExBrown" Color="#EFEBE9" />
+    <SolidColorBrush x:Key="ExGrey" Color="#FAFAFA" />
+    <SolidColorBrush x:Key="ExBlueGrey" Color="#ECEFF1" />
+
+
+</ResourceDictionary>

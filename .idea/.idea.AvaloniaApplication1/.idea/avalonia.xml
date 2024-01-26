@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="APP.SDK/MainWindow.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
+        <entry key="AvaloniaApplication1/App.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
+        <entry key="AvaloniaApplication1/Views/MainWindow.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
+        <entry key="AvaloniaApplication1/Views/SettingsWindow.axaml" value="AvaloniaApplication1/AvaloniaApplication1.csproj" />
+        <entry key="Plugins/TestPlugin/App.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/DebugWindow.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Styles/WidgetPublic.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/Clock.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/KomorebiEx.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/PowerStatus.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/TrafficMonitor.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

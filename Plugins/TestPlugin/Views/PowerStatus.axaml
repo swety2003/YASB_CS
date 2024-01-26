@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:TestPlugin.ViewModels"
+             x:DataType="vm:PowerStatusViewModel"
+             x:Class="TestPlugin.Views.PowerStatus">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/WidgetPublic.axaml" />
+    </UserControl.Styles>
+    <Border Classes="card">
+        <StackPanel Orientation="Horizontal" Margin="0 0 4 0">
+            <TextBlock Opacity=".8" Classes="icon" Margin="4 0 0 0" VerticalAlignment="Center" Text="{Binding Icon}" />
+            <TextBlock Opacity=".8" Margin="4 0" VerticalAlignment="Center" Text="{Binding LifePercent,StringFormat='{}{0}%'}" />
+
+            
+
+        </StackPanel>
+    </Border>
+</UserControl>
