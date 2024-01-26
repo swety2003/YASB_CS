@@ -19,7 +19,7 @@
 
         <Border Classes="card" Background="{DynamicResource SecondaryContainerBrush}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Classes="icon" Text="&#xe894;" />
+                <TextBlock Classes="icon" Text="&#xe63e;" />
                 <TextBlock Foreground="{DynamicResource OnBackgroundBrush}"
                            HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Run>

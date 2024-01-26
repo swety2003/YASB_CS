@@ -33,7 +33,6 @@
         <!--	  <ProjectReference Include="..\..\APP.SDK\APP.SDK.csproj" Condition="'$(Configuration)'=='Debug'" />-->
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Extra\"/>
         <Folder Include="Vendor\"/>
     </ItemGroup>
     <ItemGroup>

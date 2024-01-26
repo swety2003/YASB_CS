@@ -79,7 +79,7 @@ internal class PluginLoader
 
 #if DEBUG
         var pfl = plugin_folders.ToList();
-        pfl.Add("D:\\Repo\\CS\\YASB\\build\\Plugins\\Debug\\TestPlugin");
+        pfl.Add("D:\\Repo\\CS\\YASB-CS\\build\\Plugins\\Debug\\TestPlugin");
         plugin_folders = pfl.ToArray();
 #endif
 

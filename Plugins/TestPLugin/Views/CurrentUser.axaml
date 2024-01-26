@@ -1,0 +1,53 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:TestPlugin.ViewModels"
+             x:DataType="vm:CurrentUserViewModel"
+             x:Class="TestPlugin.Views.CurrentUser">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/WidgetPublic.axaml" />
+    </UserControl.Styles>
+    <Border>
+        <StackPanel>
+            <!-- <TextBlock Padding="0" Margin="6 2" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"> -->
+            <!--     <TextBlock.Text> -->
+            <!--         <MultiBinding StringFormat="{}{0}@{1}"> -->
+            <!--             <Binding Path="UserName"></Binding> -->
+            <!--             <Binding Path="MachineName"></Binding> -->
+            <!--         </MultiBinding> -->
+            <!--     </TextBlock.Text> -->
+            <!-- </TextBlock> -->
+            <Menu Height="28" Margin="2 0" VerticalAlignment="Center" Padding="0"
+                  BorderThickness="0" FontSize="18" Foreground="{DynamicResource OnBackgroundBrush}">
+                <Menu.Styles>
+                    <Style Selector="MenuItem">
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0" />
+                    </Style>
+                    <Style Selector="TextBlock.icon">
+                        <Setter Property="FontSize" Value="24"></Setter>
+                    </Style>
+                </Menu.Styles>
+
+                <MenuItem MaxWidth="600" Height="26" CornerRadius="6"
+                          Background="{DynamicResource TertiaryContainerBrush}"
+                          >
+                    <MenuItem.Header>
+                        <MultiBinding StringFormat="{}{0}@{1}">
+                            <Binding Path="UserName"></Binding>
+                            <Binding Path="MachineName"></Binding>
+                        </MultiBinding></MenuItem.Header>
+                    <MenuItem Header="注销"> <MenuItem.Icon><TextBlock Classes="icon" Text="&#xe9ba;"/></MenuItem.Icon></MenuItem>
+                    <MenuItem Header="重启"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe8ac;"/></MenuItem.Icon></MenuItem>
+                    <MenuItem Header="关机"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe5d5;"/></MenuItem.Icon></MenuItem>
+                    
+                    <MenuItem Header="高级启动"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe8b8;"/></MenuItem.Icon></MenuItem>
+                </MenuItem>
+
+            </Menu>
+
+        </StackPanel>
+    </Border>
+</UserControl>

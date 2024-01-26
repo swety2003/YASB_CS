@@ -68,6 +68,8 @@ internal sealed class Program
     }
 
 
+    private static ILogger<Program> _logger;
+    
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -76,6 +78,7 @@ internal sealed class Program
     {
         try
         {
+            _logger = GetService<ILoggerFactory>().CreateLogger<Program>();
             
             bool createNew;
             var _ = new Mutex(true, "swety.yasb.app", out createNew);
@@ -84,8 +87,8 @@ internal sealed class Program
                 Environment.Exit(0);
 
 
-            Program.GetService<AppConfigService>().Load();
-            Program.GetService<PluginLoader>().Load();
+            GetService<AppConfigService>().Load();
+            GetService<PluginLoader>().Load();
             
             // 在此处准备和运行您的 App
             BuildAvaloniaApp()
@@ -94,6 +97,10 @@ internal sealed class Program
         catch (Exception e)
         {
             Debugger.Break();
+            _logger.LogError(e.Message,e);
+
+            
+            
             // 在这里我们可以处理异常，例如将其添加到日志文件中
             //Log.Fatal(e, "发生了一些非常糟糕的事情");
         }
@@ -102,10 +109,10 @@ internal sealed class Program
             // 此块是可选的。
             // 如果需要清理或类似操作，请使用 finally 块
             //Log.CloseAndFlush();
-            Program.GetService<AppConfigService>().Config.Status =
-                Program.GetService<SettingsWindowViewModel>().TopBarStatuses.ToList();
-            Program.GetService<AppConfigService>().Save();
-            foreach (var item in Program.GetService<AppConfigService>().Config.Status) item.Enabled = false;
+            GetService<AppConfigService>().Config.Status =
+                GetService<SettingsWindowViewModel>().TopBarStatuses.ToList();
+            GetService<AppConfigService>().Save();
+            foreach (var item in GetService<AppConfigService>().Config.Status) item.Enabled = false;
         }
     }
 

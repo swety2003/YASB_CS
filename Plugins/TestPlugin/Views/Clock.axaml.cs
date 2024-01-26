@@ -6,7 +6,7 @@ namespace TestPlugin.Views;
 
 public partial class Clock : UserControl, IWidgetItem
 {
-    internal static WidgetMainfest info = new("???????", "", typeof(Clock));
+    internal static WidgetMainfest info = new("时钟", "", typeof(Clock));
     private readonly ClockViewModel vm;
 
     public Clock()

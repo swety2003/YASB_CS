@@ -22,6 +22,7 @@ public class Plugin : IPlugin
         TrafficMonitor.info,
         KomorebiEx.info,
         PowerStatus.info,
+        CurrentUser.info,
     };
 
     public ILoggerFactory LoggerFactory { get; set; }
