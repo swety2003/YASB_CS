@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using APP.SDK;
-using APP.SDK.Core;
+using APP.Shared;
+using APP.Shared.Core;
 using Microsoft.Extensions.Logging;
 using TestPlugin.Views;
 
@@ -23,6 +23,7 @@ public class Plugin : IPlugin
         KomorebiEx.info,
         PowerStatus.info,
         CurrentUser.info,
+        VirtualDesktopManager.info,
     };
 
     public ILoggerFactory LoggerFactory { get; set; }

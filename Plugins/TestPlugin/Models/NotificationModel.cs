@@ -87,7 +87,7 @@ namespace TestPlugin.Model
         /// </summary>
         public int hwnd { get; set; }
         /// <summary>
-        /// YASB-CS (正在运行) - Microsoft Visual Studio Preview
+        /// APP-CS (正在运行) - Microsoft Visual Studio Preview
         /// </summary>
         public string title { get; set; }
         /// <summary>

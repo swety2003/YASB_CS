@@ -1,4 +1,4 @@
-﻿using APP.SDK.Core;
+﻿using APP.Shared.Core;
 using Avalonia.Controls;
 using TestPlugin.ViewModels;
 

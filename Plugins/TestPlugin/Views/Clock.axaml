@@ -11,7 +11,7 @@
     <Border Classes="card">
         <StackPanel Orientation="Horizontal" Margin="0 0 4 0">
             <TextBlock Opacity=".8" Classes="icon" Margin="4 0" VerticalAlignment="Center" Text="&#xe8b5;" />
-            <TextBlock Text="{Binding NowTime,StringFormat={}{0:HH:mm:ss}}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding NowTime,StringFormat={}{0:HH:mm}}" VerticalAlignment="Center" />
 
         </StackPanel>
     </Border>

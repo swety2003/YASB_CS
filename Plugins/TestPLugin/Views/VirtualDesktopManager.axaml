@@ -1,0 +1,61 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="vm:VirtualDesktopManagerViewModel"
+             xmlns:vm="clr-namespace:TestPlugin.ViewModels"
+             x:Class="TestPlugin.Views.VirtualDesktopManager">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/WidgetPublic.axaml" />
+    </UserControl.Styles>
+    <ListBox SelectionMode="Single"
+             VerticalAlignment="Stretch"
+             Background="Transparent"
+             SelectedItem="{Binding FocusedDesktop}"
+             Foreground="{DynamicResource OnPrimaryContainerBrush}" BorderThickness="0" Margin="2 1"
+             ItemsSource="{Binding VirtualDesktops}"
+             SelectedIndex="{Binding FocusedDesktop}">
+        <ListBox.Styles>
+            <Style Selector="ListBoxItem">
+                <!-- <Setter Property="CornerRadius" Value="8" /> -->
+                <!-- <Setter Property="Margin" Value="2 " /> -->
+                <Setter Property="Padding" Value="0" />
+
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="MinWidth" Value="32" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <!-- <Setter Property="Foreground" Value="{DynamicResource OnPrimaryContainerBrush}" /> -->
+                <!-- <Setter Property="Background" Value="{DynamicResource PrimaryContainerBrush}" /> -->
+            </Style>
+            <Style Selector="ListBoxItem:pressed">
+                <Setter Property="Opacity" Value=".8" />
+            </Style>
+            <Style Selector="ListBoxItem:selected">
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryBrush}" />
+                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}" />
+
+            </Style>
+        </ListBox.Styles>
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <!-- <TextBlock HorizontalAlignment="Center" Text="{Binding name}" /> -->
+                <Button HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch" CornerRadius="0"
+                        VerticalContentAlignment="Center" 
+                        HorizontalContentAlignment="Center" Margin="0" Padding="0" 
+                        Background="Transparent" Command="{Binding desktop.Switch}" 
+                        Content="{Binding name}"></Button>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+
+        <ListBox.ItemsPanel>
+            <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+        </ListBox.ItemsPanel>
+
+
+    </ListBox>
+    
+</UserControl>

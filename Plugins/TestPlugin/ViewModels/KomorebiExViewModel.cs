@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using APP.SDK.Extra;
+using APP.Shared.Extra;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -96,6 +96,7 @@ public partial class KomorebiExViewModel : ViewModelBase
         }
 
         CommandHelper.SetWinHideBehavior();
+        // CommandHelper.ToggleMonocle();
 
         if (server.pipeServer == null) throw new Exception();
 

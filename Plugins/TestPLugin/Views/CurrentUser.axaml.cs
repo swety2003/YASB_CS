@@ -1,4 +1,4 @@
-﻿using APP.SDK.Core;
+﻿using APP.Shared.Core;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;

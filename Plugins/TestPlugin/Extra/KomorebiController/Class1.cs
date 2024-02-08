@@ -22,7 +22,10 @@ public static class CommandHelper
     {
         CallKomorebic("window-hiding-behaviour hide");
     }
-
+    public static void ToggleMonocle()
+    {
+        CallKomorebic("toggle-monocle");
+    }
     public static void StopProcess()
     {
         CallKomorebic("stop");

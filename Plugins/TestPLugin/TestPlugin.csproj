@@ -1,15 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
-        <!--<ApplicationManifest>app.manifest</ApplicationManifest>-->
+		<Platforms>x64</Platforms>
+		<BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <BaseOutputPath>..\..\build\Plugins</BaseOutputPath>
+        <IsPackable>false</IsPackable>
 
-    </PropertyGroup>
-    <PropertyGroup>
-        <OutputType>WinExe</OutputType>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,26 +17,27 @@
         <DebugType>full</DebugType>
     </PropertyGroup>
     <ItemGroup>
-        <AvaloniaXaml Remove="bin\**"/>
-        <Compile Remove="bin\**"/>
-        <EmbeddedResource Remove="bin\**"/>
-        <None Remove="bin\**"/>
+        <AvaloniaXaml Remove="bin\**" />
+        <Compile Remove="bin\**" />
+        <EmbeddedResource Remove="bin\**" />
+        <None Remove="bin\**" />
+        <AvaloniaXaml Remove="Vendor\VirtualDesktop\**" />
+        <Compile Remove="Vendor\VirtualDesktop\**" />
+        <EmbeddedResource Remove="Vendor\VirtualDesktop\**" />
+        <None Remove="Vendor\VirtualDesktop\**" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\APP.SDK\APP.SDK.csproj">
+        <ProjectReference Include="..\..\..\MaterialShell\MaterialShell\VirtualDesktop\src\VirtualDesktop\VirtualDesktop.csproj" />
+        <ProjectReference Include="..\..\APP.Shared\APP.Shared.csproj">
             <Private>false</Private>
             <ExcludeAssets>runtime</ExcludeAssets>
         </ProjectReference>
+        <ProjectReference Include="Vendor\VirtualDesktop\src\VirtualDesktop\VirtualDesktop.csproj" />
 
         <!--	  <ProjectReference Include="..\..\APP.SDK\APP.SDK.csproj" Condition="'$(Configuration)'=='Debug'" />-->
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Vendor\"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Update="App.axaml.cs">
-            <DependentUpon>%(Filename)</DependentUpon>
-        </Compile>
+        <Folder Include="Vendor\" />
     </ItemGroup>
     <ItemGroup>
         <Reference Include="CZGL.SystemInfo">
@@ -46,11 +45,11 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <None Remove="Vendor\komorebi\komorebi.exe"/>
+        <None Remove="Vendor\komorebi\komorebi.exe" />
         <Content Include="Vendor\komorebi\komorebi.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <None Remove="Vendor\komorebi\komorebic.exe"/>
+        <None Remove="Vendor\komorebi\komorebic.exe" />
         <Content Include="Vendor\komorebi\komorebic.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -61,14 +60,10 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
-
-
-    <!--<ItemGroup>
-      <PackageReference Include="Avalonia" Version="11.0.6" />
-      <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
-      <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
-      <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
-      --><!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.--><!--
-    <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
-  </ItemGroup>-->
+    <ItemGroup>
+      <AdditionalFiles Remove="Vendor\VirtualDesktop\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <AvaloniaResource Remove="Vendor\VirtualDesktop\**" />
+    </ItemGroup>
 </Project>

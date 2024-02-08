@@ -28,7 +28,6 @@
         <ListBox SelectionMode="Single"
                  VerticalAlignment="Stretch"
                  Background="Transparent"
-
                  Foreground="{DynamicResource OnPrimaryContainerBrush}" BorderThickness="0" Margin="2 1"
                  ItemsSource="{Binding WorkspaceData.workspaceItems}"
                  SelectedIndex="{Binding WorkspaceData.focused}">
