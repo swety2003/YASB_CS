@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="APP.Shared/App.axaml" value="APP/APP.csproj" />
+        <entry key="APP.Shared/MainWindow.axaml" value="APP/APP.csproj" />
+        <entry key="APP/App.axaml" value="APP/APP.csproj" />
+        <entry key="APP/Views/MainWindow.axaml" value="APP/APP.csproj" />
+        <entry key="APP/Views/SettingsWindow.axaml" value="APP/APP.csproj" />
+        <entry key="Plugins/TestPlugin/Styles/WidgetPublic.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/Clock.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/CurrentUser.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/KomorebiEx.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/TrafficMonitor.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="Plugins/TestPlugin/Views/VirtualDesktopManager.axaml" value="Plugins/TestPlugin/TestPlugin.csproj" />
+        <entry key="YASB/Views/MainWindow.axaml" value="YASB/YASB.csproj" />
+        <entry key="YASB/Views/SettingsWindow.axaml" value="YASB/YASB.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

@@ -8,8 +8,7 @@ using System.Runtime.Loader;
 using APP.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace APP.Common;
-
+namespace APP.Services;
 
 internal class PluginLoader
 {
@@ -32,8 +31,10 @@ internal class PluginLoader
     }
 
 
-    private PluginInfo CreatePluginInstances(Assembly assembly) =>
-         new PluginInfo(assembly);
+    private PluginInfo CreatePluginInstances(Assembly assembly)
+    {
+        return new PluginInfo(assembly);
+    }
 
     private Assembly LoadPlugin(string pluginLocation)
     {
@@ -55,7 +56,7 @@ internal class PluginLoader
 
         var plugin_folders = Directory.GetDirectories(PLUGIN_FOLDER);
 
-        List<PluginInfo> Plugins = plugin_folders.Select(pluginPath =>
+        var Plugins = plugin_folders.Select(pluginPath =>
         {
             var entery = new DirectoryInfo(pluginPath).Name + ".dll";
             var plugin_main = Path.Combine(pluginPath, entery);

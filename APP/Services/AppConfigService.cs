@@ -3,14 +3,14 @@ using APP.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace APP.Common;
+namespace APP.Services;
 
-internal class AppConfigService
+internal class AppConfigManager
 {
     private const string CONFIG_FILE = "config.json";
-    private readonly ILogger<AppConfigService> _logger;
+    private readonly ILogger<AppConfigManager> _logger;
 
-    public AppConfigService(ILogger<AppConfigService> logger)
+    public AppConfigManager(ILogger<AppConfigManager> logger)
     {
         _logger = logger;
     }

@@ -1,47 +1,48 @@
 ﻿using System;
-using Avalonia.Controls;
-using Avalonia.Threading;
+using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CZGL.SystemInfo;
+using TB.Shared.Utils;
 
 namespace TestPlugin.ViewModels;
 
-internal partial class TrafficMonitorViewModel : ViewModelBase
+public partial class TrafficMonitorViewModel : ViewModelBase
 {
-    private readonly NetworkInfo network;
     [ObservableProperty] private int cpuLoad;
 
     [ObservableProperty] private NetItem download;
+    private NetworkInfo network;
     private Rate oldRate;
-
     [ObservableProperty] private int ramLoad;
-
     [ObservableProperty] private NetItem upload;
-
     private CPUTime v1;
 
-    public TrafficMonitorViewModel(UserControl control) : base(control)
+    public override void Init()
     {
+        base.Init();
+
+
         v1 = CPUHelper.GetCPUTime();
         network = NetworkInfo.TryGetRealNetworkInfo() ?? throw new Exception();
         oldRate = network.GetIpv4Speed();
     }
 
-    internal override void OnEnabled()
+    public void OpenTaskmgr()
     {
-        _Timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-        _Timer.Tick += _Timer_Tick;
-        _Timer.Start();
+        ProcessStartInfo psi = new ProcessStartInfo();
+        psi.FileName = "cmd.exe";
+        psi.Arguments = "/c taskmgr";
+        psi.CreateNoWindow = true;
+        Process.Start(psi);
     }
 
-    internal override void OnDisabled()
+    public override void Update()
     {
-        _Timer.Tick -= _Timer_Tick;
-
-        _Timer.Stop();
+        _Timer_Tick();
     }
 
-    private void _Timer_Tick(object? sender, EventArgs e)
+
+    private void _Timer_Tick()
     {
         var v2 = CPUHelper.GetCPUTime();
         var value = CPUHelper.CalculateCPULoad(v1, v2);
@@ -57,6 +58,7 @@ internal partial class TrafficMonitorViewModel : ViewModelBase
         Upload = new NetItem(speed.Sent.Size.ToString(), speed.Sent.SizeType.ToString());
         Download = new NetItem(speed.Received.Size.ToString(), speed.Received.SizeType.ToString());
     }
+
 
     public record NetItem(string size, string type);
 }

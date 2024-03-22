@@ -1,28 +1,30 @@
-using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
 using APP.Common;
 using APP.Common.WindowHelper;
-using APP.Models;
+using APP.Services;
+using APP.Shared;
+using APP.Shared.Controls;
 using APP.ViewModels;
-using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Microsoft.Extensions.Logging;
+using static APP.Services.ServiceManager;
 
 namespace APP.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : AppBarWindow
 {
-    private readonly DesktopAppBar dab_helper;
-
-    public MainWindow()
+    private ILogger<MainWindow> _logger;
+    public MainWindow(ILogger<MainWindow> l,MainWindowViewModel vm)
     {
         InitializeComponent();
-
-        dab_helper = new DesktopAppBar(this);
+        _logger = l;
+        DataContext = vm;
     }
 
     private void MenuItem_Click(object? sender, RoutedEventArgs e)
     {
         Close();
-        // Environment.Exit(0);
     }
 
     private void MenuItem_Click1(object? sender, RoutedEventArgs e)
@@ -35,30 +37,26 @@ public partial class MainWindow : Window
     {
         base.OnLoaded(e);
 
-        dab_helper.SetAsAppBar();
-
-
+        Closed += (_, _) => Events.OnRequestExit?.Invoke(this, default); 
         new HideInRecentTasksHelper(this).HideInRecentTasks();
-        var tbcs = Program.GetService<WidgetContainerService>();
+        var tbcs = GetService<WidgetManager>();
         tbcs.RightPanel = right_area;
         tbcs.LeftPanel = left_area;
         tbcs.CenterPanel = center_area;
-        tbcs.InitTopBarContainerService();
+        tbcs.Init();
+        
+        _logger.LogDebug($"Load widget from config.");
 
-        var tbs = Program.GetService<SettingsWindowViewModel>().TopBarStatuses;
-        foreach (var item in Program.GetService<AppConfigService>().Config.Status ?? new List<WidgetStatus>())
+        var tbs = GetService<SettingsWindowViewModel>().TopBarStatuses;
+        foreach (var item in GetService<AppConfigManager>().Config.Status)
         foreach (var i1 in tbs)
             if (item.Enabled && i1.Wid == item.Wid)
             {
                 i1.Pos = item.Pos;
                 i1.Enabled = true;
             }
+        _logger.LogDebug($"Load widget complete.");
+
     }
 
-    protected override void OnClosing(WindowClosingEventArgs e)
-    {
-        base.OnClosing(e);
-
-        dab_helper.UnSetAppBar();
-    }
 }

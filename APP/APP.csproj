@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>   
+        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
         <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -21,6 +21,7 @@
         <Compile Remove="bin\**"/>
         <EmbeddedResource Remove="bin\**"/>
         <None Remove="bin\**"/>
+        <Compile Remove="Common\WindowHelper\DesktopAppBar.cs"/>
     </ItemGroup>
 
 
@@ -41,6 +42,11 @@
 
 
     <ItemGroup>
-        <ProjectReference Include="..\APP.Shared\APP.Shared.csproj" />
+        <ProjectReference Include="..\APP.Shared\APP.Shared.csproj"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Folder Include="Controls\" />
     </ItemGroup>
 </Project>

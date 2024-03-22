@@ -1,11 +1,12 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:TestPlugin.ViewModels"
-             x:DataType="vm:TrafficMonitorViewModel"
-             x:Class="TestPlugin.Views.TrafficMonitor">
+﻿<WidgetControl x:TypeArguments="vm:TrafficMonitorViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               xmlns:vm="using:TestPlugin.ViewModels"
+               x:DataType="vm:TrafficMonitorViewModel"
+               xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+               x:Class="TestPlugin.Views.TrafficMonitor">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/WidgetPublic.axaml" />
     </UserControl.Styles>
@@ -19,20 +20,21 @@
 
         <Border Classes="card">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Classes="icon" Text="&#xe63e;" />
-                <TextBlock Foreground="{DynamicResource OnBackgroundBrush}"
+                <TextBlock Classes="mdl2" Text="&#xE839;" />
+                <TextBlock FontSize="12"
                            HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Run>
                         <Run.Text>
-                            <MultiBinding StringFormat="↑{0}{1}/s ">
+                            <MultiBinding StringFormat="↑ {0}{1}/s ">
                                 <Binding FallbackValue="0" Path="Upload.size" />
                                 <Binding FallbackValue="k" Path="Upload.type" />
                             </MultiBinding>
                         </Run.Text>
                     </Run>
+                    <LineBreak />
                     <Run>
                         <Run.Text>
-                            <MultiBinding StringFormat="↓{0}{1}/s ">
+                            <MultiBinding StringFormat="↓ {0}{1}/s ">
                                 <Binding FallbackValue="0" Path="Download.size" />
                                 <Binding FallbackValue="k" Path="Download.type" />
                             </MultiBinding>
@@ -45,19 +47,23 @@
 
 
         <Border Classes="card">
+            <i:Interaction.Behaviors>
+                <EventTriggerBehavior EventName="Tapped">
+                    <InvokeCommandAction Command="{Binding OpenTaskmgr}"></InvokeCommandAction>
+                </EventTriggerBehavior>
+            </i:Interaction.Behaviors>
             <StackPanel Orientation="Horizontal">
-                <StackPanel.Styles>
-                    <Style Selector="TextBlock">
-                        <Setter Property="Foreground" Value="{DynamicResource OnSecondaryContainerBrush}" />
-                    </Style>
-                </StackPanel.Styles>
-                <TextBlock Classes="icon" Text="&#xe30d;" />
-                <TextBlock Text="{Binding RamLoad}" />
-                <TextBlock Text="%" />
-                <TextBlock Classes="icon" Text="&#xe322;" />
-                <TextBlock Text="{Binding CpuLoad}" />
-                <TextBlock Text="%" />
+                <TextBlock Classes="mdl2" Text="&#xE950;" />
+                <TextBlock FontSize="12"
+                           HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Run Text="{Binding RamLoad,StringFormat=RAM:{0}%}" />
+                    <LineBreak />
+                    <Run Text="{Binding CpuLoad,StringFormat=CPU:{0}%}" />
+
+                </TextBlock>
+
+                <TextBlock />
             </StackPanel>
         </Border>
     </StackPanel>
-</UserControl>
+</WidgetControl>

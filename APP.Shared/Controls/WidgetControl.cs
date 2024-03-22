@@ -1,34 +1,26 @@
 ﻿using System;
 using Avalonia.Controls;
+using Microsoft.Extensions.Logging;
 using TB.Shared.Utils;
 
-namespace APP.Shared.Controls
+namespace APP.Shared.Controls;
+
+public class WidgetControl<T> : UserControl where T : ViewModelBase, new()
 {
-    public class WidgetControl<T> : UserControl where T : ViewModelBase, new()
+    public WidgetControl()
     {
-        
-        private T? viewmodel;
-
-        public T? VM => viewmodel;
-
-        public WidgetControl()
-        {
-            viewmodel = new T();
-            viewmodel.SetView(this);
-            DataContext = viewmodel;
-
-
-            
-        }
-
-
+        VM = new T();
+        VM.SetView(this);
+        DataContext = VM;
     }
 
-    public class MyViewBase : UserControl
-    {
-        public MyViewBase()
-        {
-            throw new NotSupportedException();
-        }
-    }
+    public T? VM { get; }
 }
+
+// public class WidgetControl : UserControl
+// {
+//     public WidgetControl()
+//     {
+//         throw new NotSupportedException();
+//     }
+// }

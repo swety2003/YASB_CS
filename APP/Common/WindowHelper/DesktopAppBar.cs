@@ -8,22 +8,24 @@ using Windows.Win32.UI.Shell;
 using Avalonia;
 using Avalonia.Controls;
 using Windows.Win32;
+using Windows.Win32.UI.WindowsAndMessaging;
+
 namespace APP.Common.WindowHelper;
 
-internal class DesktopAppBar
+public enum AppBarDockMode : uint
 {
-    public enum AppBarDockMode : uint
-    {
-        Left = 0,
-        Top,
-        Right,
-        Bottom
-    }
+    Left = 0,
+    Top,
+    Right,
+    Bottom
+}
+public class DesktopAppBar
+{
 
     private static readonly uint AppBarMessageId = PInvoke.RegisterWindowMessage("AppBarMessage_EEDFB5206FC4");
     private readonly Window window;
 
-    private int _DockedWidthOrHeight = 32;
+    private int _DockedWidthOrHeight = 40;
 
     private AppBarDockMode _DockMode = AppBarDockMode.Top;
 
@@ -33,6 +35,7 @@ internal class DesktopAppBar
     private bool IsAppBarRegistered;
     private bool IsInAppBarResize;
     private bool IsMinimized;
+    private unsafe delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT> _wrappedAvaloniaWinProc;
 
     public DesktopAppBar(Window w)
     {
@@ -92,8 +95,10 @@ internal class DesktopAppBar
 
         return value;
     }
+    private delegate LRESULT WndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);
 
-    public void SetAsAppBar()
+    private WndProc _proc;
+    public unsafe void SetAsAppBar()
     {
         if (Design.IsDesignMode) return;
 
@@ -109,9 +114,19 @@ internal class DesktopAppBar
         IsAppBarRegistered = true;
         OnDockLocationChanged();
 
-        AvaloniaWinProcHelper.OnWndProcHook = MyCustomWindowProc;
+        // AvaloniaWinProcHelper.OnWndProcHook = MyCustomWindowProc;
+        //
+        // AvaloniaWinProcHelper.Init(Handle);
+        
+        var WindowHandle = Handle;
 
-        AvaloniaWinProcHelper.Init(Handle);
+        _wrappedAvaloniaWinProc =
+            (delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)PInvoke.GetWindowLongPtr(WindowHandle,
+                WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC);
+        
+        _proc = MyCustomWindowProc;
+        
+        PInvoke.SetWindowLongPtr(WindowHandle, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC,Marshal.GetFunctionPointerForDelegate(_proc) );
     }
 
     private double GetScale()
@@ -203,8 +218,7 @@ internal class DesktopAppBar
         };
     }
 
-
-    private void MyCustomWindowProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
+    private unsafe LRESULT MyCustomWindowProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
     {
         if (msg == NativeMethods.WM_SIZE)
         {
@@ -243,6 +257,7 @@ internal class DesktopAppBar
             }
         }
         //return IntPtr.Zero;
+        return _wrappedAvaloniaWinProc(hwnd, msg, wParam, lParam);
     }
 
     public void UnSetAppBar()

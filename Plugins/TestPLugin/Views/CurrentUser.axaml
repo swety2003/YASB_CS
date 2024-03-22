@@ -1,43 +1,69 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="clr-namespace:TestPlugin.ViewModels"
-             x:DataType="vm:CurrentUserViewModel"
-             x:Class="TestPlugin.Views.CurrentUser">
+﻿<WidgetControl x:TypeArguments="vm:CurrentUserViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               xmlns:vm="clr-namespace:TestPlugin.ViewModels"
+               x:DataType="vm:CurrentUserViewModel"
+               x:Class="TestPlugin.Views.CurrentUser">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/WidgetPublic.axaml" />
     </UserControl.Styles>
-    <Border Classes="card">
-        <Menu Margin="0" VerticalAlignment="Stretch" Padding="0"
-              BorderThickness="0" FontSize="18" Foreground="{DynamicResource OnBackgroundBrush}">
-            <Menu.Styles>
-                <Style Selector="MenuItem">
-                    <Setter Property="VerticalAlignment" Value="Stretch" />
-                    <Setter Property="Margin" Value="0 " />
-                    <Setter Property="Background" Value="Transparent" />
+    <Border>
 
-                </Style>
-                <Style Selector="TextBlock.icon">
-                    <Setter Property="FontSize" Value="24"></Setter>
-                </Style>
-            </Menu.Styles>
+        <StackPanel Orientation="Horizontal">
+            <Menu Margin="0" VerticalAlignment="Stretch" Padding="0"
+                  BorderThickness="0" FontSize="18">
+                <Menu.Styles>
+                    <Style Selector="MenuItem">
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Setter Property="Margin" Value="0 " />
 
-            <MenuItem Height="24" MaxWidth="600"
-            >
-                <MenuItem.Header>
-                    <MultiBinding StringFormat="{}{0}@{1}">
-                        <Binding Path="UserName"></Binding>
-                        <Binding Path="MachineName"></Binding>
-                    </MultiBinding></MenuItem.Header>
-                <MenuItem Header="注销"> <MenuItem.Icon><TextBlock Classes="icon" Text="&#xe9ba;"/></MenuItem.Icon></MenuItem>
-                <MenuItem Header="重启"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe8ac;"/></MenuItem.Icon></MenuItem>
-                <MenuItem Header="关机"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe5d5;"/></MenuItem.Icon></MenuItem>
-                    
-                <MenuItem Header="高级启动"><MenuItem.Icon><TextBlock Classes="icon" Text="&#xe8b8;"/></MenuItem.Icon></MenuItem>
-            </MenuItem>
+                        <Setter Property="Background" Value="Transparent" />
 
-        </Menu>
+                    </Style>
+                    <Style Selector="TextBlock.icon">
+                        <Setter Property="FontSize" Value="24" />
+                    </Style>
+                </Menu.Styles>
+
+                <MenuItem MaxWidth="600">
+                    <MenuItem.Header>
+                        <MultiBinding StringFormat="{}{0}@{1}">
+                            <Binding Path="UserName" />
+                            <Binding Path="MachineName" />
+                        </MultiBinding>
+                    </MenuItem.Header>
+                    <MenuItem Header="锁屏" Command="{Binding Lock}">
+                        <MenuItem.Icon>
+                            <TextBlock Classes="icon" Text="&#xe9ba;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="注销" Command="{Binding LogOut}">
+                        <MenuItem.Icon>
+                            <TextBlock Classes="icon" Text="&#xe9ba;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="重启" Command="{Binding ReBoot}">
+                        <MenuItem.Icon>
+                            <TextBlock Classes="icon" Text="&#xe8ac;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="关机" Command="{Binding ShutDown}">
+                        <MenuItem.Icon>
+                            <TextBlock Classes="icon" Text="&#xe5d5;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <MenuItem Header="高级启动" Command="{Binding AdvancedBoot}">
+                        <MenuItem.Icon>
+                            <TextBlock Classes="icon" Text="&#xe8b8;" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+
+            </Menu>
+        </StackPanel>
     </Border>
-</UserControl>
+</WidgetControl>

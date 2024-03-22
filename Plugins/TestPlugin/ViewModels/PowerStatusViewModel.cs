@@ -1,96 +1,61 @@
 ﻿using System;
+using System.Text;
 using Windows.Win32;
 using Windows.Win32.System.Power;
-using Avalonia.Controls;
-using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TB.Shared.Utils;
 
 namespace TestPlugin.ViewModels;
 
-public partial class PowerStatusViewModel:ViewModelBase
+public partial class PowerStatusViewModel : ViewModelBase
 {
-    public PowerStatusViewModel(UserControl control) : base(control)
+    [ObservableProperty] private string icon;
+
+    [ObservableProperty] private int lifePercent;
+
+    public override void Update()
+
     {
-        _Timer = new DispatcherTimer();
-        _Timer.Interval = new TimeSpan(0, 0, 1);
+        TimerOnTick();
     }
 
-    internal override void OnEnabled()
-    {
-        _Timer.Tick += TimerOnTick;
-        _Timer.Start();
-    }
-
-    private readonly string[] onlineIcon = {
-        "\uf0a2",
-        "\uf0a2",
-        "\uf0a5",
-        "\uf0a6",
-        "\uf0a7",
-        "\uf0a7",
-        "\ue1a3"
-    };
-    private readonly string[] offlineIcon = {
-        "\ue19c",
-        "\uebd9",
-        "\uebe0",
-        "\uebe2",
-        "\uebd4",
-        "\uebd2",
-        "\uebd2"
-    };
-    private char ParseUnicodeEscapedCharacter(string escapedSequence)
-    {
-        if (escapedSequence.StartsWith(@"&#") && escapedSequence.EndsWith(";"))
-        {
-            int codePoint;
-            if (int.TryParse(escapedSequence.Substring(2, escapedSequence.Length - 3), out codePoint))
-            {
-                return (char)codePoint;
-            }
-        }
-
-        return '\0'; // 返回默认字符或抛出异常，根据实际情况选择
-    }
-    private void TimerOnTick(object? sender, EventArgs e)
+    private void TimerOnTick()
     {
         SYSTEM_POWER_STATUS status;
         PInvoke.GetSystemPowerStatus(out status);
         LifePercent = status.BatteryLifePercent;
+        var utf8 = Encoding.UTF8;
         switch (status.ACLineStatus)
         {
             case 0:
-            {   // offline
-                int index = (int)Math.Ceiling((decimal)(status.BatteryLifePercent / 15));
-                Icon = offlineIcon[index];
-
-            } break;
+            {
+                // offline
+                var index = (int)Math.Ceiling((decimal)(status.BatteryLifePercent / 10));
+                // Icon = offlineIcon[index]
+                var c = '\uF5F2';
+                Icon = ((char)(c + index)).ToString();
+            }
+                break;
             case 1:
             {
                 //online
-                int index = (int)Math.Ceiling((decimal)(status.BatteryLifePercent / 15));
-                Icon = onlineIcon[index];
-            } break;
+                var index = (int)Math.Ceiling((decimal)(status.BatteryLifePercent / 10));
+                // Icon = onlineIcon[index];
+                var c = '\uF5FD';
+
+                Icon = ((char)(c + index)).ToString();
+            }
+                break;
             case 255:
             {
                 Icon = "&#xe1a6;";
-            } break;
+            }
+                break;
             default:
             {
                 Icon = "&#xe1a6;";
-
-            } break;
+            }
+                break;
         }
-
     }
-
-    internal override void OnDisabled()
-    {
-        _Timer.Tick -= TimerOnTick;
-        _Timer.Stop();
-    }
-
-    [ObservableProperty] private int lifePercent;
-
-    [ObservableProperty] private string icon;
 }

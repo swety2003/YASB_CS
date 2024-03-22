@@ -1,35 +1,41 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:APP.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="APP.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        ShowInTaskbar="False"
-        Background="Transparent"
-        FontSize="16"
-        SystemDecorations="None"
-        Title="APP">
+<AppBarWindow xmlns="https://github.com/avaloniaui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:vm="using:APP.ViewModels"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+                       x:Class="APP.Views.MainWindow"
+                       x:DataType="vm:MainWindowViewModel"
+                       Icon="/Assets/avalonia-logo.ico"
+                       ShowInTaskbar="True"
+                       Background="Red"
+                       FontSize="16"
+                       Width="1800"
+                       Height="40"
+                       SystemDecorations="None"
+                       Title="APP">
     <Window.Styles>
         <Style Selector="Border.round">
             <Setter Property="CornerRadius" Value="4" />
         </Style>
         <Style Selector="TextBlock">
-            <Setter Property="FontFamily" Value="宋体,Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简"></Setter>
+            <Setter Property="FontFamily" Value="宋体,Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简" />
         </Style>
     </Window.Styles>
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem Click="MenuItem_Click1" Header="Settings" />
+            <MenuItem Click="MenuItem_Click1" Header="Hide">
+                
+            </MenuItem>
+
             <MenuItem Click="MenuItem_Click" Header="Exit" />
         </ContextMenu>
     </Window.ContextMenu>
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
-    <Border VerticalAlignment="Top" Height="32" CornerRadius="0" Classes="round" Padding="6 0" Background="{DynamicResource BackgroundBrush}">
+    <Border VerticalAlignment="Stretch" CornerRadius="0" Classes="round" Padding="0" Background="#101010">
         <Grid Margin="0 " ColumnDefinitions="*,auto,*">
 
             <StackPanel x:Name="left_area" Orientation="Horizontal" VerticalAlignment="Stretch" />
@@ -42,4 +48,4 @@
     </Border>
 
 
-</Window>
+</AppBarWindow>

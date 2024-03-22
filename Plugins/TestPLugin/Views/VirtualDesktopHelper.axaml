@@ -1,32 +1,35 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="vm:VirtualDesktopManagerViewModel"
-             xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
-             xmlns:vm="clr-namespace:TestPlugin.ViewModels"
-             x:Class="TestPlugin.Views.VirtualDesktopHelper">
+﻿<WidgetControl x:TypeArguments="vm:VirtualDesktopManagerViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               x:DataType="vm:VirtualDesktopManagerViewModel"
+               xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+               xmlns:vm="clr-namespace:TestPlugin.ViewModels"
+               x:Class="TestPlugin.Views.VirtualDesktopHelper">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/WidgetPublic.axaml" />
     </UserControl.Styles>
     <StackPanel Orientation="Horizontal">
-        <TextBlock Classes="mdl2" Text="&#xE7C4;"></TextBlock>
-        <ListBox
-            Background="Transparent"
-                 VerticalAlignment="Stretch"
-                 SelectedValue="{Binding FocusedDesktop}" BorderThickness="0" Margin="2 1"
-                 ItemsSource="{Binding VirtualDesktops}">
+        <Button VerticalAlignment="Stretch" Margin="0" Background="Transparent" BorderThickness="0" CornerRadius="0">
             <i:Interaction.Behaviors>
                 <EventTriggerBehavior EventName="Tapped">
-                                <InvokeCommandAction Command="{Binding FocusedDesktop.desktop.Switch}"></InvokeCommandAction>
+                    <InvokeCommandAction Command="{Binding OpenFZE}" />
                 </EventTriggerBehavior>
             </i:Interaction.Behaviors>
-            <ListBox.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="关闭"></MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
+            <TextBlock Margin="4 0" Classes="mdl2" Text="&#xE7C4;" />
+        </Button>
+        <ListBox
+            Background="Transparent"
+            VerticalAlignment="Stretch"
+            
+            SelectedValue="{Binding FocusedDesktop}" BorderThickness="0" Margin="2 1"
+            ItemsSource="{Binding VirtualDesktops}">
+            <i:Interaction.Behaviors>
+                <EventTriggerBehavior EventName="Tapped">
+                    <InvokeCommandAction Command="{Binding FocusedDesktop.Switch}" />
+                </EventTriggerBehavior>
+            </i:Interaction.Behaviors>
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <!-- <Setter Property="CornerRadius" Value="8" /> -->
@@ -49,17 +52,37 @@
             </ListBox.Styles>
             <ListBox.ItemTemplate>
                 <DataTemplate>
+                    <Border Background="#01FFFFFF">
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding Remove}" Header="移除此桌面"></MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                        
+                        <i:Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="DoubleTapped">
+                                <ChangePropertyAction TargetObject="tb_1" PropertyName="IsHitTestVisible" Value="true"></ChangePropertyAction>
+                            </EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                        
+                        <TextBox VerticalContentAlignment="Center" x:Name="tb_1" 
+                                 Background="Transparent" 
+                                 Margin="4 0" Watermark="未命名" 
+                                 BorderThickness="0" 
+                                 IsHitTestVisible="False" 
+                                 VerticalAlignment="Center" 
+                                 HorizontalAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
+                                 Text="{Binding Name,Mode=OneTime}">
+                            
+                            <i:Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="LostFocus">
+                                    <ChangePropertyAction PropertyName="IsHitTestVisible" Value="false"></ChangePropertyAction>
+                                </EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                    </Border>
                     
-                    
-                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="{Binding name}">
-
-                    </TextBlock>
-                    <!-- <Button HorizontalAlignment="Stretch"  -->
-                    <!--         VerticalAlignment="Stretch" CornerRadius="0" -->
-                    <!--         VerticalContentAlignment="Center"  -->
-                    <!--         HorizontalContentAlignment="Center" Margin="0" Padding="0"  -->
-                    <!--         Background="Transparent" Command="{Binding desktop.Switch}"  -->
-                    <!--         Content="{Binding name}"></Button> -->
                 </DataTemplate>
             </ListBox.ItemTemplate>
 
@@ -71,7 +94,11 @@
 
 
         </ListBox>
-        <Button Background="Transparent" Command="{Binding NewVD}" Margin="0" CornerRadius="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">+</Button>
+        <Button Background="Transparent" Command="{Binding NewVD}" Margin="0" CornerRadius="0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center">
+            <TextBlock Classes="mdl2" Text="&#xE710;"></TextBlock>
+        </Button>
     </StackPanel>
-    
-</UserControl>
+
+</WidgetControl>

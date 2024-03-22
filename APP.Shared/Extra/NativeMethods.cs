@@ -7,43 +7,6 @@ namespace APP.Common;
 
 internal static class NativeMethods
 {
-    
-    [DllImport("Dwmapi.dll")]
-    public static extern int DwmGetWindowAttribute(nint hWnd, uint dwAttribute, out RECT pvAttribute, int cbAttribute);
-    [DllImport("Shell32.dll", ExactSpelling = true)]
-    public static extern uint SHAppBarMessage(ABM dwMessage, ref APPBARDATA pData);
-    public struct WINDOWPOS
-    {
-        public nint hwnd;
-
-        public nint hwndInsertAfter;
-
-        public int x;
-
-        public int y;
-
-        public int cx;
-
-        public int cy;
-
-        public int flags;
-
-        public RECT Bounds
-        {
-            get
-            {
-                return new RECT(x, y, cx, cy);
-            }
-            set
-            {
-                x = (int)value.X;
-                y = (int)value.Y;
-                cx = (int)value.Width;
-                cy = (int)value.Height;
-            }
-        }
-    }
-
     [Flags]
     public enum ABM
     {
@@ -59,6 +22,7 @@ internal static class NativeMethods
         WINDOWPOSCHANGED,
         SETSTATE
     }
+
     [Flags]
     public enum ABN
     {
@@ -112,4 +76,39 @@ internal static class NativeMethods
     private const int CCHDEVICENAME = 32;
 
     public static int GWLP_WNDPROC = -4;
+
+    [DllImport("Dwmapi.dll")]
+    public static extern int DwmGetWindowAttribute(nint hWnd, uint dwAttribute, out RECT pvAttribute, int cbAttribute);
+
+    [DllImport("Shell32.dll", ExactSpelling = true)]
+    public static extern uint SHAppBarMessage(ABM dwMessage, ref APPBARDATA pData);
+
+    public struct WINDOWPOS
+    {
+        public nint hwnd;
+
+        public nint hwndInsertAfter;
+
+        public int x;
+
+        public int y;
+
+        public int cx;
+
+        public int cy;
+
+        public int flags;
+
+        public RECT Bounds
+        {
+            get => new(x, y, cx, cy);
+            set
+            {
+                x = value.X;
+                y = value.Y;
+                cx = value.Width;
+                cy = value.Height;
+            }
+        }
+    }
 }

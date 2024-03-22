@@ -17,25 +17,6 @@
 
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="avares://APP.Shared/Styles/ColorSystem/DesignTimeBrush.axaml" />
-                <ResourceInclude Source="avares://APP.Shared/Styles/ColorSystem/DarkColor.axaml" />
-
-                <!--<ResourceDictionary>
-					<ResourceDictionary.ThemeDictionaries>
-						<ResourceDictionary x:Key='Light'>
-							<ResourceDictionary.MergedDictionaries>
-								<ResourceInclude Source="/Styles/ColorSystem/LightColor.axaml"/>
-							</ResourceDictionary.MergedDictionaries>
-						</ResourceDictionary>
-						<ResourceDictionary x:Key='Dark'>
-							<ResourceDictionary.MergedDictionaries>
-								<ResourceInclude Source="/Styles/ColorSystem/DarkColor.axaml"/>
-							</ResourceDictionary.MergedDictionaries>
-						</ResourceDictionary>
-					</ResourceDictionary.ThemeDictionaries>
-				</ResourceDictionary>-->
-            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

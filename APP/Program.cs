@@ -1,19 +1,30 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using APP.Common;
+using APP.Models;
+using APP.Services;
 using APP.ViewModels;
+using APP.Views;
 using Avalonia;
-using Avalonia.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using static APP.Services.ServiceManager;
 
 namespace APP;
 
 internal sealed class Program
 {
+
+    private static ILogger<Program> _logger;
+
+    #region APPHost init
+
+    
     static Program()
     {
         AppHost = Host.CreateDefaultBuilder()
@@ -33,22 +44,22 @@ internal sealed class Program
             .UseContentRoot(AppContext.BaseDirectory).ConfigureServices
             ((context, services) =>
             {
-                services.AddSingleton<AppConfigService>();
-                services.AddSingleton<WidgetContainerService>();
-                services.AddSingleton<PluginLoader>();
+                var allTypes = Assembly.GetExecutingAssembly().GetTypes();
+
+                // 过滤出特定命名空间下的类型（类）
+                var svs = allTypes.Where(type =>
+                    type.Namespace == "APP.Services" && !(type.IsAbstract && type.IsSealed && type.IsClass));
+                foreach (var type in svs) services.AddSingleton(type);
 
                 #region ViewModel
 
-                services.AddSingleton<SettingsWindowViewModel>();
-                //services.AddSingleton<ItemManageVM>();
-                //services.AddSingleton<CardManageVM>();
-                //services.AddSingleton<InstalledCardsVM>();
-                //services.AddSingleton<PreferenceVM>();
-                //services.AddSingleton<SideBarManageVM>();
+                var viewmodels = allTypes.Where(type => type.Namespace == "APP.ViewModels");
+                foreach (var type in viewmodels) services.AddSingleton(type);
 
                 #endregion
+                var views = allTypes.Where(type => type.Namespace == "APP.Views");
+                foreach (var type in views) services.AddTransient(type);
 
-                //services.AddTransient<SettingWindow>();
                 //services.AddTransient<CardManage>();
                 //services.AddTransient<PreferencePage>();
 
@@ -59,18 +70,10 @@ internal sealed class Program
             }).Build();
     }
 
-    private static IHost AppHost { get; }
+    #endregion
 
-    public static T GetService<T>() where T : class
-    {
-        if (AppHost.Services.GetService(typeof(T)) is not T service)
-            throw new ArgumentException($"{typeof(T)} Service Not Found");
-        return service;
-    }
+    internal static IHost AppHost { get; }
 
-
-    private static ILogger<Program> _logger;
-    
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -80,17 +83,18 @@ internal sealed class Program
         try
         {
             _logger = GetService<ILoggerFactory>().CreateLogger<Program>();
-            
+
             bool createNew;
-            var _ = new Mutex(true, "swety.yasb.app", out createNew);
+            string n = typeof(Program).Namespace;
+            _ = new Mutex(true, $"swety.yasb.app-{n}", out createNew);
             if (!createNew)
                 //MessageBox.Show("Application is already run!");
                 Environment.Exit(0);
 
 
-            GetService<AppConfigService>().Load();
+            GetService<AppConfigManager>().Load();
             GetService<PluginLoader>().Load();
-            
+
             // 在此处准备和运行您的 App
             BuildAvaloniaApp()
                 .StartWithClassicDesktopLifetime(args);
@@ -103,20 +107,14 @@ internal sealed class Program
             throw;
 #endif
 
-
-
-            // 在这里我们可以处理异常，例如将其添加到日志文件中
-            //Log.Fatal(e, "发生了一些非常糟糕的事情");
         }
         finally
         {
-            // 此块是可选的。
-            // 如果需要清理或类似操作，请使用 finally 块
-            //Log.CloseAndFlush();
-            GetService<AppConfigService>().Config.Status =
-                GetService<SettingsWindowViewModel>().TopBarStatuses.ToList();
-            GetService<AppConfigService>().Save();
-            foreach (var item in GetService<AppConfigService>().Config.Status) item.Enabled = false;
+            
+            var ac = GetService<WidgetManager>().GetSortedProfiles();
+
+            GetService<AppConfigManager>().Config.Status = ac;
+            GetService<AppConfigManager>().Save();
         }
     }
 

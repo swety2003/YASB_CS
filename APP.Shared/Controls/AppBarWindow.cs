@@ -1,29 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Interop;
-using System.Windows.Media;
 using Windows.Win32;
-using APP.Common;
-using APP.Common.WindowHelper;
-using Avalonia;
-using Avalonia.Controls;
-using Rect = System.Windows.Rect;
-using Thickness = System.Windows.Thickness;
-using Window = Avalonia.Controls.Window;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.WindowsAndMessaging;
+using APP.Common;
+using APP.Shared.Models;
+using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Threading;
-using Point = Avalonia.Point;
+using Microsoft.Extensions.Logging;
+using Window = Avalonia.Controls.Window;
 using Size = Avalonia.Size;
 
-namespace APP.Controls;
+namespace APP.Shared.Controls;
 
 public enum AppBarDockMode
 {
@@ -32,32 +24,62 @@ public enum AppBarDockMode
     Right,
     Bottom
 }
-public class AppBarWindow:Window
+
+public class AppBarWindow : Window
 {
+    private ILogger<AppBarWindow> _logger = Logger.CreateLogger<AppBarWindow>();
+    public static readonly StyledProperty<AppBarDockMode> DockModeProperty =
+        AvaloniaProperty.Register<AppBarWindow, AppBarDockMode>(nameof(DockMode), AppBarDockMode.Top,
+            coerce: DockLocation_Changed);
+
+    public static readonly StyledProperty<MonitorInfo> MonitorProperty =
+        AvaloniaProperty.Register<AppBarWindow, MonitorInfo>(nameof(DockMode), coerce: DockLocation_Changed);
+
+    public static readonly StyledProperty<int> DockedWidthOrHeightProperty =
+        AvaloniaProperty.Register<AppBarWindow, int>(nameof(DockMode), 40, coerce: DockedWidthOrHeight_Coerce);
+
+
+    private static uint _AppBarMessageId;
+    private WndProc _proc;
+
+    // protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
+    // {
+    //     base.OnDpiChanged(oldDpi, newDpi);
+    //     OnDockLocationChanged();
+    // }
+
+    private unsafe delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT> _wrappedAvaloniaWinProc;
+    private HWND desktopHandle;
+
+    private Thickness FrameThickness;
     private bool IsAppBarRegistered;
 
     private bool IsInAppBarResize;
 
     private bool IsMinimized;
 
-    public static readonly StyledProperty<AppBarDockMode> DockModeProperty = AvaloniaProperty.Register<AppBarWindow, AppBarDockMode>(nameof(DockMode), defaultValue: AppBarDockMode.Top,coerce:DockLocation_Changed);
+    private PixelPoint LastPosition = new(-32000, -32000);
+    private HWND shellHandle;
 
-    public static readonly StyledProperty<MonitorInfo> MonitorProperty =  AvaloniaProperty.Register<AppBarWindow, MonitorInfo>(nameof(DockMode), defaultValue: null,coerce:DockLocation_Changed);
-
-    private static MonitorInfo DockLocation_Changed(AvaloniaObject d, MonitorInfo arg2)
+    static AppBarWindow()
     {
-        ((AppBarWindow)d).OnDockLocationChanged();
-        return arg2;
+        ShowInTaskbarProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<bool>(false));
+        MinHeightProperty.OverrideMetadata(typeof(AppBarWindow),
+            new StyledPropertyMetadata<double>(20.0, coerce: MinMaxHeightWidth_Changed));
+        MinWidthProperty.OverrideMetadata(typeof(AppBarWindow),
+            new StyledPropertyMetadata<double>(20.0, coerce: MinMaxHeightWidth_Changed));
+        MaxHeightProperty.OverrideMetadata(typeof(AppBarWindow),
+            new StyledPropertyMetadata<double>(coerce: MinMaxHeightWidth_Changed));
+        MaxWidthProperty.OverrideMetadata(typeof(AppBarWindow),
+            new StyledPropertyMetadata<double>(coerce: MinMaxHeightWidth_Changed));
     }
 
-    public static readonly StyledProperty<int> DockedWidthOrHeightProperty =  AvaloniaProperty.Register<AppBarWindow, int>(nameof(DockMode), defaultValue: 40,coerce:DockedWidthOrHeight_Coerce);
-
-
-    private static uint _AppBarMessageId;
-
-    private Thickness FrameThickness;
-
-    private PixelPoint LastPosition = new(-32000, -32000);
+    public AppBarWindow()
+    {
+        SystemDecorations = SystemDecorations.None;
+        // CanResize = false;
+        // Topmost = true;
+    }
 
     public AppBarDockMode DockMode
     {
@@ -67,10 +89,7 @@ public class AppBarWindow:Window
 
     public MonitorInfo Monitor
     {
-        get
-        {
-            return GetValue(MonitorProperty);
-        }
+        get => GetValue(MonitorProperty);
         set => SetValue(MonitorProperty, value);
     }
 
@@ -84,10 +103,7 @@ public class AppBarWindow:Window
     {
         get
         {
-            if (_AppBarMessageId == 0)
-            {
-                _AppBarMessageId = PInvoke.RegisterWindowMessage("AppBarMessage_YASB_SC");
-            }
+            if (_AppBarMessageId == 0) _AppBarMessageId = PInvoke.RegisterWindowMessage("AppBarMessage_YASB_SC");
 
             return _AppBarMessageId;
         }
@@ -97,28 +113,25 @@ public class AppBarWindow:Window
     {
         set
         {
-            var TopLeft = new PixelPoint(value.top,value.left);
-            Thickness ft = FrameThickness;
-            if (LastPosition != TopLeft)
-            {
-                FrameThickness = (ft = default);
-            }
+            var TopLeft = new PixelPoint(value.top, value.left);
+            var ft = FrameThickness;
+            if (LastPosition != TopLeft) FrameThickness = ft = default;
 
             SetTopLeft();
             if (LastPosition != TopLeft)
             {
-                FrameThickness = (ft = GetFrameThickness());
+                FrameThickness = ft = GetFrameThickness();
                 LastPosition = TopLeft;
             }
 
-            if (FrameThickness.Top != 0.0 || FrameThickness.Left != 0.0)
-            {
-                SetTopLeft();
-            }
+            if (FrameThickness.Top != 0.0 || FrameThickness.Left != 0.0) SetTopLeft();
 
-
-            this.ClientSize = new Size(Width,Height);
             
+            Width = DesktopDimensionToWpf(value.Width + ft.Left + ft.Right);
+            Height = DesktopDimensionToWpf(value.Height + ft.Top + ft.Bottom);
+
+            ClientSize = new Size(Width, Height);
+
             void SetTopLeft()
             {
                 Position = new PixelPoint(DesktopDimensionToWpf(value.left - ft.Left),
@@ -127,25 +140,17 @@ public class AppBarWindow:Window
         }
     }
 
-    static AppBarWindow()
-    {
-        ShowInTaskbarProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<bool>(false));
-        MinHeightProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<double>(20.0,coerce: MinMaxHeightWidth_Changed));
-        MinWidthProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<double>(20.0, coerce:MinMaxHeightWidth_Changed));
-        MaxHeightProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<double>(coerce:MinMaxHeightWidth_Changed));
-        MaxWidthProperty.OverrideMetadata(typeof(AppBarWindow), new StyledPropertyMetadata<double>(coerce:MinMaxHeightWidth_Changed));
-    }
+    public bool RunningFullScreenApp { get; private set; }
 
-    public AppBarWindow()
+    private static MonitorInfo DockLocation_Changed(AvaloniaObject d, MonitorInfo arg2)
     {
-        SystemDecorations = SystemDecorations.None;
-        // CanResize = false;
-        Topmost = true;
+        ((AppBarWindow)d).OnDockLocationChanged();
+        return arg2;
     }
 
     private static int DockedWidthOrHeight_Coerce(AvaloniaObject d, int value)
     {
-        AppBarWindow appBarWindow = (AppBarWindow)d;
+        var appBarWindow = (AppBarWindow)d;
         switch (appBarWindow.DockMode)
         {
             case AppBarDockMode.Left:
@@ -161,15 +166,9 @@ public class AppBarWindow:Window
 
     private static int BoundIntToDouble(int value, double min, double max)
     {
-        if (min > value)
-        {
-            return (int)Math.Ceiling(min);
-        }
+        if (min > value) return (int)Math.Ceiling(min);
 
-        if (max < value)
-        {
-            return (int)Math.Floor(max);
-        }
+        if (max < value) return (int)Math.Floor(max);
 
         return value;
     }
@@ -187,21 +186,8 @@ public class AppBarWindow:Window
         return appBarDockMode;
     }
 
-    // protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
-    // {
-    //     base.OnDpiChanged(oldDpi, newDpi);
-    //     OnDockLocationChanged();
-    // }
-
-    private unsafe delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT> _wrappedAvaloniaWinProc;
-    private delegate LRESULT WndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);
-    private WndProc _proc;
-    private HWND desktopHandle;
-    private HWND shellHandle;
-
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        
         desktopHandle = PInvoke.GetDesktopWindow();
         shellHandle = PInvoke.GetShellWindow();
         unsafe
@@ -211,21 +197,22 @@ public class AppBarWindow:Window
 
             if (!ShowInTaskbar)
             {
-                ulong num = (ulong)PInvoke.GetWindowLongPtr(handle, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+                var num = (ulong)PInvoke.GetWindowLongPtr(handle, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
                 num |= 0x80;
                 PInvoke.SetWindowLongPtr(handle, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (nint)num);
             }
-        
+
             _wrappedAvaloniaWinProc =
                 (delegate* unmanaged<HWND, uint, WPARAM, LPARAM, LRESULT>)PInvoke.GetWindowLongPtr(handle,
                     WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC);
-        
-            _proc = MyCustomWindowProc;
-        
-            PInvoke.SetWindowLongPtr(handle, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC,Marshal.GetFunctionPointerForDelegate(_proc) );
 
-        
-            APPBARDATA pData = GetAppBarData();
+            _proc = MyCustomWindowProc;
+
+            PInvoke.SetWindowLongPtr(handle, WINDOW_LONG_PTR_INDEX.GWLP_WNDPROC,
+                Marshal.GetFunctionPointerForDelegate(_proc));
+
+
+            var pData = GetAppBarData();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM.NEW, ref pData);
             IsAppBarRegistered = true;
             OnDockLocationChanged();
@@ -237,7 +224,7 @@ public class AppBarWindow:Window
         base.OnClosing(e);
         if (!e.Cancel && IsAppBarRegistered)
         {
-            APPBARDATA pData = GetAppBarData();
+            var pData = GetAppBarData();
             NativeMethods.SHAppBarMessage(NativeMethods.ABM.REMOVE, ref pData);
             IsAppBarRegistered = false;
         }
@@ -245,16 +232,17 @@ public class AppBarWindow:Window
 
     private double GetScale()
     {
-        using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+        using (var graphics = Graphics.FromHwnd(IntPtr.Zero))
         {
-            float dpiX = graphics.DpiX;
-            float dpiY = graphics.DpiY;
+            var dpiX = graphics.DpiX;
+            var dpiY = graphics.DpiY;
             // 计算缩放倍率  
             // 通常认为96 DPI是标准DPI，所以缩放倍率 = 当前DPI / 96  
-            double scaleX = dpiX / 96.0;  
+            var scaleX = dpiX / 96.0;
             return scaleX;
         }
     }
+
     private int WpfDimensionToDesktop(double dim)
     {
         return (int)Math.Ceiling(dim * GetScale());
@@ -272,10 +260,10 @@ public class AppBarWindow:Window
         //     return;
         // }
 
-        APPBARDATA pData = GetAppBarData();
+        var pData = GetAppBarData();
         pData.rc = GetSelectedMonitor().ViewportBounds;
         NativeMethods.SHAppBarMessage(NativeMethods.ABM.QUERYPOS, ref pData);
-        int num = ((!IsMinimized) ? WpfDimensionToDesktop(DockedWidthOrHeight) : 0);
+        var num = !IsMinimized ? WpfDimensionToDesktop(DockedWidthOrHeight) : 0;
         switch (DockMode)
         {
             case AppBarDockMode.Top:
@@ -295,10 +283,7 @@ public class AppBarWindow:Window
         }
 
         NativeMethods.SHAppBarMessage(NativeMethods.ABM.SETPOS, ref pData);
-        if (IsMinimized)
-        {
-            return;
-        }
+        if (IsMinimized) return;
 
         IsInAppBarResize = true;
         try
@@ -313,12 +298,10 @@ public class AppBarWindow:Window
 
     private MonitorInfo GetSelectedMonitor()
     {
-        MonitorInfo monitorInfo = Monitor;
-        IEnumerable<MonitorInfo> allMonitors = MonitorInfo.GetAllMonitors();
+        var monitorInfo = Monitor;
+        var allMonitors = MonitorInfo.GetAllMonitors();
         if (monitorInfo == null || !allMonitors.Contains(monitorInfo))
-        {
             monitorInfo = allMonitors.First(f => f.IsPrimary);
-        }
 
         return monitorInfo;
     }
@@ -327,7 +310,7 @@ public class AppBarWindow:Window
     {
         var handle = new HWND(TryGetPlatformHandle().Handle);
 
-        APPBARDATA result = default(APPBARDATA);
+        var result = default(APPBARDATA);
         result.cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA));
         result.hWnd = handle;
         result.uCallbackMessage = AppBarMessageId;
@@ -339,16 +322,16 @@ public class AppBarWindow:Window
     {
         if (msg == 5)
         {
-            IsMinimized = base.ShowInTaskbar && wParam == 1;
+            IsMinimized = ShowInTaskbar && wParam == 1;
             OnDockLocationChanged();
         }
         else if (msg == 70 && !IsInAppBarResize)
         {
-            NativeMethods.WINDOWPOS structure = Marshal.PtrToStructure<NativeMethods.WINDOWPOS>(lParam);
+            var structure = Marshal.PtrToStructure<NativeMethods.WINDOWPOS>(lParam);
             if ((structure.flags & 3) != 3 && !IsMinimized && (structure.x != -32000 || structure.y != -32000))
             {
                 structure.flags |= 3;
-                Marshal.StructureToPtr(structure, lParam, fDeleteOld: false);
+                Marshal.StructureToPtr(structure, lParam, false);
             }
         }
         else
@@ -356,77 +339,76 @@ public class AppBarWindow:Window
             switch (msg)
             {
                 case 6:
-                    {
-                        APPBARDATA pData2 = GetAppBarData();
-                        NativeMethods.SHAppBarMessage(NativeMethods.ABM.ACTIVATE, ref pData2);
-                        break;
-                    }
+                {
+                    var pData2 = GetAppBarData();
+                    NativeMethods.SHAppBarMessage(NativeMethods.ABM.ACTIVATE, ref pData2);
+                    break;
+                }
                 case 71:
-                    {
-                        APPBARDATA pData = GetAppBarData();
-                        NativeMethods.SHAppBarMessage(NativeMethods.ABM.WINDOWPOSCHANGED, ref pData);
-                        break;
-                    }
+                {
+                    var pData = GetAppBarData();
+                    NativeMethods.SHAppBarMessage(NativeMethods.ABM.WINDOWPOSCHANGED, ref pData);
+                    break;
+                }
                 default:
-                    if (msg == AppBarMessageId && wParam == 1)
-                    {
-                        OnDockLocationChanged();
-                    }
+                    if (msg == AppBarMessageId && wParam == 1) OnDockLocationChanged();
 
                     break;
             }
         }
+
         const int ABN_STATECHANGE = 0x0000000;
         const int ABN_POSCHANGED = 0x0000001;
         const int ABN_FULLSCREENAPP = 0x0000002;
         const int ABN_WINDOWARRANGE = 0x0000003; // lParam == TRUE means hide
         if (msg == AppBarMessageId)
         {
+            
             switch (wParam.Value)
             {
-                case (int)ABN_FULLSCREENAPP:
+                case ABN_FULLSCREENAPP:
                 {
                     IntPtr hWnd = PInvoke.GetForegroundWindow();
                     //判断当前全屏的应用是否是桌面
-                    if (hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))
+                    if ((hWnd.Equals(desktopHandle) || hWnd.Equals(shellHandle))||lParam!=1)
                     {
                         RunningFullScreenApp = false;
-                        break;
+                        
+                        WindowState = WindowState.Normal;
+                        Opacity = 1;
                     }
+
                     //判断是否全屏
-                    if (lParam == 1)
+                    else if (lParam == 1)
                     {
-                        this.RunningFullScreenApp = true; this.WindowState = WindowState.Minimized;
-                    }
-                    else
-                    {
-                        this.RunningFullScreenApp = false; this.WindowState = WindowState.Normal;
+                        RunningFullScreenApp = true;
+                        WindowState = WindowState.Minimized;
+                        Opacity = 0;
+
                     }
 
                     break;
                 }
-                default:
-                    break;
             }
+            
+            _logger.LogDebug($"Full screen check result:{RunningFullScreenApp}");
+
         }
+
         return _wrappedAvaloniaWinProc(hwnd, msg, wParam, lParam);
     }
-
-    public bool RunningFullScreenApp { get; private set; }
 
     private Thickness GetFrameThickness()
     {
         var handle = new HWND(TryGetPlatformHandle().Handle);
-        if (!PInvoke.GetWindowRect(handle, out var rect))
-        {
-            return default;
-        }
-        
+        if (!PInvoke.GetWindowRect(handle, out var rect)) return default;
+
         if (NativeMethods.DwmGetWindowAttribute(handle, 9u, out var pvAttribute, Marshal.SizeOf<RECT>()) != 0)
-        {
             return default;
-        }
-        
-        return new Thickness(pvAttribute.left - rect.left, pvAttribute.top - rect.top, rect.right - pvAttribute.right, rect.bottom - pvAttribute.bottom);
+
+        return new Thickness(pvAttribute.left - rect.left, pvAttribute.top - rect.top, rect.right - pvAttribute.right,
+            rect.bottom - pvAttribute.bottom);
     }
+
+    private delegate LRESULT WndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam);
 }

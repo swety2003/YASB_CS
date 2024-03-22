@@ -1,8 +1,20 @@
-﻿<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="TestPlugin.Views.ForegroundWindow">
-    Welcome to Avalonia!
-</UserControl>
+﻿<WidgetControl x:TypeArguments="viewModels:ForegroundWindowViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:viewModels="clr-namespace:TestPlugin.ViewModels"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               x:DataType="viewModels:ForegroundWindowViewModel"
+               x:Class="TestPlugin.Views.ForegroundWindow">
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/WidgetPublic.axaml" />
+    </UserControl.Styles>
+    <Border MaxWidth="400" Classes="card">
+        <DockPanel Margin="0 0 4 0">
+            <Image Width="24" Margin="4 0" DockPanel.Dock="Left" Source="{Binding Icon}" />
+            <TextBlock MaxWidth="400" TextTrimming="CharacterEllipsis" Text="{Binding Data.title}"
+                       VerticalAlignment="Center" />
+
+        </DockPanel>
+    </Border>
+</WidgetControl>

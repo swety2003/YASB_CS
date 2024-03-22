@@ -1,24 +1,15 @@
-﻿using APP.Shared.Core;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using TestPlugin.Extra;
+﻿using APP.Shared;
+using APP.Shared.Controls;
 using TestPlugin.ViewModels;
 
 namespace TestPlugin.Views;
 
-public partial class CurrentUser : UserControl,IWidgetItem
+[Widget("当前用户", "23333")]
+
+public partial class CurrentUser : WidgetControl<CurrentUserViewModel>
 {
     public CurrentUser()
     {
         InitializeComponent();
-        this.InitVM<CurrentUserViewModel>();
     }
-
-    public void OnEnabled()=> this.GetVM<CurrentUserViewModel>().OnEnabled();
-
-    public void OnDisabled()=>this.GetVM<CurrentUserViewModel>().OnDisabled();
-    public WidgetMainfest Info => info;
-    internal static WidgetMainfest info = new("User", "", typeof(CurrentUser));
-
 }

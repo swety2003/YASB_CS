@@ -1,64 +1,108 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Avalonia.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TB.Shared.Utils;
+using TestPlugin.Extra;
 using WindowsDesktop;
 
 namespace TestPlugin.ViewModels;
 
-public enum VDItemType
-{
-    Normal,AddBtn
-}
 
-public record VDItem(string name, VDItemType type, VirtualDesktop desktop);
-public partial class VirtualDesktopManagerViewModel:ViewModelBase
+public partial class VirtualDesktopManagerViewModel : ViewModelBase
 {
-    private List<VirtualDesktop> desktops;
-    
-    [ObservableProperty] private List<VDItem> _virtualDesktops;
-    
     [ObservableProperty] private VirtualDesktop _focusedDesktop;
-    
-    public VirtualDesktopManagerViewModel(UserControl control) : base(control)
+
+    [ObservableProperty] private int _focusedIndex;
+
+    [ObservableProperty] private ObservableCollection<VirtualDesktop> _virtualDesktops;
+
+    private List<VirtualDesktop> desktops;
+
+    public override void Init()
     {
+        base.Init();
+
+        OnEnabled();
     }
-    
+
+    public override void Update()
+    {
+        //UpdateVD();
+    }
+
+
     private void VirtualDesktopOnCreated(object? sender, VirtualDesktop e)
     {
+        //UpdateVD();
+        Dispatcher.UIThread.Invoke(() => { VirtualDesktops.Add(e); });
         e.Switch();
     }
-    
+
     private void VirtualDesktopOnCurrentChanged(object? sender, VirtualDesktopChangedEventArgs e)
     {
-        // VirtualDesktops = VirtualDesktop.GetDesktops().ToList();
         FocusedDesktop = e.NewDesktop;
     }
 
-    // private Dictionary<VirtualDesktop, string> VDNameMap = new();
-    
-    internal override void OnEnabled()
+    [RelayCommand]
+    public void NewVD()
     {
-        Task.Run(async () =>
-        {
-            VirtualDesktop.Configure();
-            desktops = VirtualDesktop.GetDesktops().ToList();
-            VirtualDesktops = desktops.Select(x=>
-                new VDItem(desktops.IndexOf(x).ToString(),
-                    VDItemType.Normal,x
-                )).ToList();
-            VirtualDesktops.Add(new VDItem("+",VDItemType.AddBtn,null));
-        
-            VirtualDesktop.CurrentChanged += VirtualDesktopOnCurrentChanged;
-            VirtualDesktop.Created += VirtualDesktopOnCreated;
-        });
-
+        VirtualDesktop.Create();
     }
-    
-    internal override void OnDisabled()
+
+
+    internal void OnEnabled()
     {
-        VirtualDesktop.CurrentChanged -= VirtualDesktopOnCurrentChanged;
-        VirtualDesktop.Created -= VirtualDesktopOnCreated;
+        UpdateVD();
+        FocusedDesktop = VirtualDesktop.Current ?? throw new Exception();
+        VirtualDesktop.CurrentChanged += VirtualDesktopOnCurrentChanged;
+        VirtualDesktop.Created += VirtualDesktopOnCreated;
+        VirtualDesktop.Destroyed += VirtualDesktop_Destroyed;
+        VirtualDesktop.Moved += VirtualDesktop_Moved;
+        //});
+    }
+
+    public void OpenFZE()
+    {
+        KeyInputSim.OpenFancyZonesEditor();
+    }
+
+    private void VirtualDesktop_Moved(object? sender, VirtualDesktopMovedEventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(() => { VirtualDesktops.Move(e.OldIndex, e.NewIndex); });
+    }
+
+    private void VirtualDesktop_Destroyed(object? sender, VirtualDesktopDestroyEventArgs e)
+    {
+        Dispatcher.UIThread.Invoke(() => { VirtualDesktops.Remove(e.Destroyed); });
+    }
+
+    private void UpdateVD()
+    {
+        VirtualDesktop.Configure();
+        var d = VirtualDesktop.GetDesktops();
+        VirtualDesktops = new ObservableCollection<VirtualDesktop>(d);
+        //foreach (var item in d)
+        //{
+        //    if (VirtualDesktops.Contains(item))
+        //    {
+        //        continue;
+        //    }
+        //    VirtualDesktops.Add(item);
+        //}
+
+        //foreach (var item in VirtualDesktops.ToList())
+        //{
+        //    if (!d.Contains(item))
+        //    {
+        //        VirtualDesktops.Remove(item);
+        //    }
+        //}
+        //VirtualDesktops = new ObservableCollection<VDItem>(desktops.Select(x =>
+        //    new VDItem(desktops.IndexOf(x).ToString(),
+        //        VDItemType.Normal, x
+        //    )).ToList());
     }
 }

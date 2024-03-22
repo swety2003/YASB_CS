@@ -13,19 +13,27 @@
         <Setter Property="Margin" Value="4 0" />
         <Setter Property="FontSize" Value="20" />
     </Style>
+    <Style Selector="TextBlock.mdl2">
+        <Setter Property="FontFamily"
+                Value="avares://APP.Shared/Assets/segmdl2.ttf#Segoe MDL2 Assets" />
+        <Setter Property="Margin" Value="4 0" />
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
 
     <Style Selector="Border.card">
         <Setter Property="CornerRadius" Value="0" />
         <Setter Property="Padding" Value="4 0" />
         <Setter Property="Margin" Value="0" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
-        <!-- <Setter Property="Background" Value="{DynamicResource SecondaryContainerBrush}" /> -->
-        <Setter Property="TextElement.Foreground" Value="{DynamicResource OnSecondaryContainerBrush}" />
+        <Setter Property="Background" Value="#01FFFFFF" />
 
     </Style>
-    
+
     <Style Selector="Border.card:pointerover">
-        <Setter Property="Background" Value="{DynamicResource SecondaryContainerBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Opacity" Value=".8" />
 
     </Style>
 

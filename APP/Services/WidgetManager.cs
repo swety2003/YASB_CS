@@ -14,7 +14,7 @@ namespace APP.Services;
 
 internal class WidgetManager
 {
-    private ILogger<WidgetManager> _logger { get; set; }
+    private ILogger<WidgetManager> _logger { get; }
 
     public WidgetManager(ILogger<WidgetManager> logger)
     {
@@ -32,9 +32,9 @@ internal class WidgetManager
 
     internal IList<WidgetProfile> WidgetStatusList => topBarStatusList;
 
-    internal Dictionary<Control,WidgetProfile> activeItems { get; } = new();
+    private Dictionary<Control,WidgetProfile> activeItems { get; } = new();
 
-    public void InitTopBarContainerService()
+    public void Init()
     {
         PanelMap[WidgetPosition.Left] = LeftPanel ?? throw new Exception();
         PanelMap[WidgetPosition.Center] = CenterPanel ?? throw new Exception();
@@ -56,6 +56,19 @@ internal class WidgetManager
         }
 
         return ret;
+    }
+
+    public void ChangePos(WidgetProfile m, WidgetPosition old, WidgetPosition value)
+    {
+        foreach (var item in activeItems)
+        {
+            if (item.Value==m)
+            {
+                PanelMap[old].Children.Remove(item.Key);
+                PanelMap[value].Children.Add(item.Key);
+                break;
+            }
+        }
     }
 
     internal event PropertyChangedEventHandler? PropertyChanged;

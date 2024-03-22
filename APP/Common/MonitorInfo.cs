@@ -16,7 +16,7 @@ public sealed class MonitorInfo : IEquatable<MonitorInfo>
     {
         ViewportBounds = mex.rcMonitor;
         WorkAreaBounds = mex.rcWork;
-        IsPrimary = mex.dwFlags == (uint)NativeMethods.MONITORINFOF.PRIMARY;
+        IsPrimary = mex.dwFlags == (uint)MONITORINFOF.PRIMARY;
         //this.DeviceId = mex.;
     }
 

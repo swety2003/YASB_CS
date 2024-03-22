@@ -1,48 +1,25 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using APP.Shared.Core;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using TestPlugin.Extra;
+using APP.Shared;
+using APP.Shared.Controls;
 using TestPlugin.ViewModels;
 using WindowsDesktop;
 
 namespace TestPlugin.Views;
 
-public partial class VirtualDesktopHelper : UserControl,IWidgetItem
+[Widget("虚拟桌面控制", "23333")]
+public partial class VirtualDesktopHelper : WidgetControl<VirtualDesktopManagerViewModel>
 {
-    
-
     public VirtualDesktopHelper()
     {
-        InitializeComObjects();
         InitializeComponent();
-        this.InitVM<VirtualDesktopManagerViewModel>();
     }
 
-
-    void InitializeComObjects()
+    static VirtualDesktopHelper()
     {
-        var abl = Path.GetDirectoryName(Assembly.GetCallingAssembly().Location);
-        
-        AppDomain.CurrentDomain.AssemblyResolve += (_, args) => args.Name.StartsWith("VirtualDesktop")?
-            Assembly.GetAssembly(typeof(VirtualDesktop)):null;
+        AppDomain.CurrentDomain.AssemblyResolve += (_, args) =>
+            args.Name.StartsWith("VirtualDesktop") ? Assembly.GetAssembly(typeof(VirtualDesktop)) : null;
     }
 
-    public void OnEnabled()
-    {
-        this.GetVM<VirtualDesktopManagerViewModel>().OnEnabled();
-    }
-
-    public void OnDisabled()
-    {        
-        this.GetVM<VirtualDesktopManagerViewModel>().OnDisabled();
-
-    }
-
-
-    public static readonly WidgetMainfest info = new("VD", "Des", typeof(VirtualDesktopHelper));
-    public WidgetMainfest Info => info;
 }

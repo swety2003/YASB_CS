@@ -1,18 +1,18 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             xmlns:vm="using:TestPlugin.ViewModels"
-             x:Class="TestPlugin.Views.Clock" x:DataType="vm:ClockViewModel">
+<WidgetControl x:TypeArguments="vm:ClockViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               xmlns:vm="using:TestPlugin.ViewModels"
+               x:Class="TestPlugin.Views.Clock" x:DataType="vm:ClockViewModel">
     <UserControl.Styles>
         <StyleInclude Source="/Styles/WidgetPublic.axaml" />
     </UserControl.Styles>
     <Border Classes="card">
-        <StackPanel Orientation="Horizontal" Margin="0 0 4 0">
-            <TextBlock Opacity=".8" Classes="icon" Margin="4 0" VerticalAlignment="Center" Text="&#xe8b5;" />
-            <TextBlock Text="{Binding NowTime,StringFormat={}{0:HH:mm}}" VerticalAlignment="Center" />
+        <StackPanel Orientation="Horizontal" Margin="0">
+            <!-- <TextBlock Classes="icon" Margin="4 0" VerticalAlignment="Center" Text="&#xe8b5;" /> -->
+            <TextBlock Text="{Binding NowTime,StringFormat={}{0:HH:mm:ss}}" VerticalAlignment="Center" />
 
         </StackPanel>
     </Border>
-</UserControl>
+</WidgetControl>

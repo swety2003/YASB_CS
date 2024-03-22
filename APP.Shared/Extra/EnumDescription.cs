@@ -11,10 +11,10 @@ public class EnumDescription
         Description = GetEnumDescription(value);
     }
 
-    public string Description { get; }
+    public string? Description { get; }
     public Enum Value { get; }
 
-    private static string GetEnumDescription(object value)
+    private static string? GetEnumDescription(object value)
     {
         var fieldInfo = value.GetType().GetField(value.ToString() ?? string.Empty);
         var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);

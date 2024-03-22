@@ -1,31 +1,14 @@
-﻿using APP.Shared.Core;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using APP.Shared;
+using APP.Shared.Controls;
 using TestPlugin.ViewModels;
 
 namespace TestPlugin.Views;
+[Widget("电量", "23333")]
 
-public partial class PowerStatus : UserControl,IWidgetItem
+public partial class PowerStatus : WidgetControl<PowerStatusViewModel>
 {
-    internal static WidgetMainfest info = new WidgetMainfest("电源状态", "", typeof(PowerStatus));
-    private PowerStatusViewModel vm;
     public PowerStatus()
     {
         InitializeComponent();
-        vm = new PowerStatusViewModel(this);
-        DataContext = vm;
     }
-
-    public void OnEnabled()
-    {
-        vm.OnEnabled();
-    }
-
-    public void OnDisabled()
-    {
-        vm.OnDisabled();
-    }
-
-    public WidgetMainfest Info => info;
 }
