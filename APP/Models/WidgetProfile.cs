@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using APP.Common;
 using APP.Models.Enums;
+using APP.Services;
 using APP.Shared.Core;
 using APP.Shared.Extra;
 using Newtonsoft.Json;
 
 namespace APP.Models;
 
-public class WidgetStatus
+public class WidgetProfile
 {
     [JsonProperty("Enabled")] private bool enabledProperty;
 

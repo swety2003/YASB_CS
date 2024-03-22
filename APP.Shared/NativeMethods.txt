@@ -1,0 +1,16 @@
+﻿CallWindowProc
+GetDpiForMonitor
+GetWindowRect
+SetWindowPos
+RegisterWindowMessage
+DwmGetWindowAttribute
+GetForegroundWindow
+GetDesktopWindow
+GetShellWindow
+SHAppBarMessage
+GetWindowLong
+SetWindowLong
+GetWindowLongPtr
+SetWindowLongPtr
+GetMonitorInfo
+EnumDisplayMonitors
