@@ -98,6 +98,5 @@ public static class Logger
 
 public static class Events
 {
-
     public static EventHandler? OnRequestExit;
 }

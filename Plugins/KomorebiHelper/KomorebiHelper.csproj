@@ -1,35 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <Platforms>x64</Platforms>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <BaseOutputPath>..\..\out\Plugins\TestPlugin</BaseOutputPath>
+        <BaseOutputPath>..\..\out\Plugins\KomorebiHelper</BaseOutputPath>
         <IsPackable>false</IsPackable>
 
     </PropertyGroup>
+
     <PropertyGroup>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     </PropertyGroup>
-    <ItemGroup>
-        <AvaloniaXaml Remove="bin\**"/>
-        <Compile Remove="bin\**"/>
-        <EmbeddedResource Remove="bin\**"/>
-        <None Remove="bin\**"/>
-        <AvaloniaXaml Remove="lib\**" />
-        <Compile Remove="lib\**" />
-        <EmbeddedResource Remove="lib\**" />
-        <None Remove="lib\**" />
-    </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\..\APP.Shared\APP.Shared.csproj">
             <Private>false</Private>
             <ExcludeAssets>runtime</ExcludeAssets>
         </ProjectReference>
-        
-        <!--	  <ProjectReference Include="..\..\APP.SDK\APP.SDK.csproj" Condition="'$(Configuration)'=='Debug'" />-->
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.49-beta">
@@ -38,17 +28,9 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="VirtualDesktop">
-        <HintPath>lib\VirtualDesktop.dll</HintPath>
-      </Reference>
-        <Reference Include="VirtualDesktop">
-            <HintPath>lib\CZGL.SystemInfo.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-      <AdditionalFiles Remove="lib\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <AvaloniaResource Remove="lib\**" />
+      <Compile Update="Views\KomorebiView.axaml.cs">
+        <DependentUpon>KomorebiView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

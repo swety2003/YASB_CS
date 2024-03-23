@@ -1,0 +1,96 @@
+﻿<WidgetControl x:TypeArguments="vm:KomorebiHelperViewModel" xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:vm="clr-namespace:KomorebiHelper.ViewModels"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+               Foreground="White"
+               x:DataType="vm:KomorebiHelperViewModel"
+               xmlns:ti="clr-namespace:KomorebiHelper.Models"
+               xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+               x:Class="KomorebiHelper.Views.KomorebiView">
+    
+    <UserControl.Styles>
+        <StyleInclude Source="/Styles/Public.axaml" />
+    </UserControl.Styles>
+    <StackPanel Orientation="Horizontal" VerticalAlignment="Stretch">
+        <Border VerticalAlignment="Center" Margin="2"
+                >
+
+            <ComboBox Background="Transparent"
+                      VerticalAlignment="Center" VerticalContentAlignment="Center" Padding="0" MaxHeight="10"
+                      BorderThickness="0"
+                      SelectedValue="{Binding Layout}"
+                      ItemsSource="{Binding LayoutList}" SelectedValueBinding="{Binding Value}"
+                      DisplayMemberBinding="{Binding Description}" MinWidth="200" />
+        </Border>
+
+
+        <ListBox SelectionMode="Single"
+                 VerticalAlignment="Stretch"
+                 Background="Transparent" BorderThickness="0" Margin="2 1"
+                 ItemsSource="{Binding WorkspaceData.workspaceItems}"
+                 SelectedIndex="{Binding WorkspaceData.focused}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border>
+                        <i:Interaction.Behaviors>
+                            <EventTriggerBehavior SourceObject="{Binding $parent[ListBoxItem]}" EventName="Tapped" >
+                                <InvokeCommandAction Command="{Binding Switch}" />
+                            </EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                        <TextBlock HorizontalAlignment="Center" Text="{Binding name}" />
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+
+
+        </ListBox>
+
+
+        <Menu Height="28" Margin="2 0" VerticalAlignment="Center" Padding="0"
+              BorderThickness="0" FontSize="18">
+            <Menu.Styles>
+                <Style Selector="MenuItem">
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Margin" Value="0" />
+
+                </Style>
+            </Menu.Styles>
+
+            <MenuItem MaxWidth="600" Height="26" CornerRadius="6"
+                      Background="{DynamicResource TertiaryContainerBrush}"
+                      Header="{Binding ActiveWinInfo.title,FallbackValue=Desktop}">
+
+                <MenuItem Header="移动到..." ItemsSource="{Binding WorkspaceData.workspaceItems}">
+                    <MenuItem.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Styles>
+                                    <Style Selector="MenuItem">
+                                        <!-- <Setter Property="Command" -->
+                                        <!--         Value="{Binding $parent[WidgetControl].((vm:KomorebiHelperViewModel)DataContext).SendToWorkSpace}" /> -->
+                                        <!-- <Setter Property="CommandParameter" Value="{Binding name}" /> -->
+                                    </Style>
+                                </TextBlock.Styles>
+                                <Run>工作区</Run>
+                                <Run Text="{Binding name}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </MenuItem.ItemTemplate>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="关闭窗口" />
+            </MenuItem>
+
+        </Menu>
+
+
+    </StackPanel>
+</WidgetControl>

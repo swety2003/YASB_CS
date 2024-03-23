@@ -56,15 +56,15 @@ public partial class ForegroundWindowViewModel : ViewModelBase
 
         var w = new Win32Window(current);
         string title = w.Title;
-        foreach (var s in spc)
-        {
-                
-            if (title.Contains(s))
-            {
-                title = title.Substring(title.IndexOf(s)+1).Trim();
-                break;
-            }
-        }
+        // foreach (var s in spc)
+        // {
+        //         
+        //     if (title.Contains(s))
+        //     {
+        //         title = title.Substring(title.IndexOf(s)+1).Trim();
+        //         break;
+        //     }
+        // }
         Data = new WindowItem(w.Handle, title);
 
 

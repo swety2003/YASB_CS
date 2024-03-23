@@ -32,9 +32,8 @@
     </Style>
 
     <Style Selector="Border.card:pointerover">
-        <Setter Property="Background" Value="{DynamicResource SystemAccentColor}" />
+        <Setter Property="Background" Value="#20FFFFFF" />
         <Setter Property="Opacity" Value=".8" />
-
     </Style>
 
 </Styles>

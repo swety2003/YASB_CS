@@ -8,10 +8,13 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Platforms>x64</Platforms>
-        <BaseOutputPath>..\build</BaseOutputPath>
+        <BaseOutputPath>..\out</BaseOutputPath>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
-
+    <PropertyGroup>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
